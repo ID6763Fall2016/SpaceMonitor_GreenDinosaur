@@ -1,2 +1,2 @@
-# SpaceMonitor_GreenDinosaur
-John Kimionis, Hareen Godthi
+# SpaceMonitor
+GreenDinosaur team: John Kimionis, Hareen Godthi
