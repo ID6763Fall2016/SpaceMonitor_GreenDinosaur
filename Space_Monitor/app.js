@@ -42,7 +42,7 @@ door_interval = 1;    // minutes
 
 function count_door_openings(){
   door_counter++;
-  console.console.log("door: " + door_counter);
+  console.log("door: " + door_counter);
 }
 
 // reset door counter every door_interval minutes
