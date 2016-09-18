@@ -18,8 +18,8 @@ server.get('/', function (req, res) {
 /******* GPIO ******/
 // button is attaced to pin 17, LED to 18
 var GPIO = require('onoff').Gpio;
-var LED_connection_status = new GPIO(18, 'out');
-var button = new GPIO(17, 'in', 'both');
+var LED_connection_status = new GPIO(18, 'out');  // gpio 18, output
+var button = new GPIO(17, 'in', 'both', { persistentWatch: true, debounceTimeout: 1000 }); // gpio 17, input, rising and falling edges interrupts, enable button to work on consecutive pushes, debounce for 1 second
 
 /******* Check Internet Connection Status *******/
 var previous_online_status = false;
@@ -30,12 +30,12 @@ setInterval(function(){
   isOnline(function(err, online) {
     // only make changes to LED when something changes in connectivity
     if (online != previous_online_status) {
-      console.log(online);
+      console.log(online ? "Connection OK" : "No Connection!");
       LED_connection_status.writeSync(online ? 0 : 1);
     }
     previous_online_status = online;
   });
-},online_check_interval*60000); // every 1 minute
+},online_check_interval*60000);
 
 /******* Measure Door openings/minute *******/
 door_counter = 0;
