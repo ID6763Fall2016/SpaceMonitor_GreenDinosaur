@@ -28,9 +28,10 @@ var LED_status = 0;
 setInterval(function(){
   var isOnline = require('is-online');
   isOnline(function(err, online) {
+    // only make changes to LED when something changes in connectivity
     if (online != previous_online) {
       console.log(online);
-      LED_status = !LED_status;
+      LED_status = online ? 1 : 0;
       led.writeSync(LED_status);
     }
     previous_online = online;
