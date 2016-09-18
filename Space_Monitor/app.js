@@ -19,7 +19,7 @@ server.get('/', function (req, res) {
 // button is attaced to pin 17, LED to 18
 var GPIO = require('onoff').Gpio;
 var LED_connection_status = new GPIO(18, 'out');  // gpio 18, output
-var button = new GPIO(17, 'in', 'both', { persistentWatch: true, debounceTimeout: 1000 }); // gpio 17, input, rising and falling edges interrupts, enable button to work on consecutive pushes, debounce for 1 second
+var button = new GPIO(17, 'in', 'rising', { persistentWatch: true, debounceTimeout: 1000 }); // gpio 17, input, rising edge interrupts only, enable button to work on consecutive pushes, debounce for 1 second
 
 /******* Check Internet Connection Status *******/
 var previous_online_status = false;
