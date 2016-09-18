@@ -34,4 +34,4 @@ setInterval(function(){
     }
     previous_online_status = online;
   });
-},1000);
+},60000);
