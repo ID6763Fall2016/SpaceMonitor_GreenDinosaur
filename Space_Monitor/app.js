@@ -23,6 +23,7 @@ var button = new GPIO(17, 'in', 'both');
 
 /******* Check Internet Connection Status *******/
 var previous_online_status = false;
+var online_check_interval = 1;  % minutes
 
 setInterval(function(){
   var isOnline = require('is-online');
@@ -34,7 +35,7 @@ setInterval(function(){
     }
     previous_online_status = online;
   });
-},60000);
+},online_check_interval*60000); // every 1 minute
 
 /******* Measure Door openings/minute *******/
 door_counter = 0;
@@ -48,7 +49,7 @@ function count_door_openings(){
 // reset door counter every door_interval minutes
 setInterval(function(){
   door_counter = 0;
-},door_interval*60);
+},door_interval*60000);
 
 // watch for Door opening actions and call callback function
 button.watch(count_door_openings);
