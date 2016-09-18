@@ -21,6 +21,10 @@ var GPIO = require('onoff').Gpio;
 var LED_connection_status = new GPIO(18, 'out');  // gpio 18, output
 var button = new GPIO(17, 'in', 'rising', { persistentWatch: true, debounceTimeout: 1000 }); // gpio 17, input, rising edge interrupts only, enable button to work on consecutive pushes, debounce for 1 second
 
+
+
+
+
 /******* Check Internet Connection Status *******/
 var previous_online_status = false;
 var online_check_interval = 1;  // minutes
@@ -36,6 +40,10 @@ setInterval(function(){
     previous_online_status = online;
   });
 },online_check_interval*60000);
+
+
+
+
 
 /******* Measure Door openings/minute *******/
 door_counter = 0;
@@ -53,6 +61,40 @@ setInterval(function(){
 
 // watch for Door opening actions and call callback function
 button.watch(count_door_openings);
+
+
+
+
+/******* Humidity/Temperature Sensor *******/
+var dht_sensor = require('node-dht-sensor');
+
+var sensor = {
+    initialize: function () {
+        return dht_sensor.initialize(22, 4);
+    },
+    read: function () {
+        var readout = dht_sensor.read();
+        console.log('Temperature: ' + readout.temperature.toFixed(2) + 'C, ' +
+            'humidity: ' + readout.humidity.toFixed(2) + '%');
+        setTimeout(function () {
+            sensor.read();
+        }, 2000);
+    }
+};
+
+if (sensor.initialize()) {
+    sensor.read();
+} else {
+    console.warn('Failed to initialize sensor');
+}
+
+
+
+
+
+
+
+
 
 
 
