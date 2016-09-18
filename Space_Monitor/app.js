@@ -23,13 +23,15 @@ var led = new GPIO(18, 'out');
 
 
 var previous_online = false;
+var LED_status = 0;
 
 setInterval(function(){
   var isOnline = require('is-online');
   isOnline(function(err, online) {
     if (online != previous_online) {
       console.log(online);
-      led.writeSync(online);
+      LED_status = !LED_status;
+      led.writeSync(LED_status);
     }
     previous_online = online;
   });
