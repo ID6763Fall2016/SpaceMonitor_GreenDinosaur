@@ -31,6 +31,6 @@ setInterval(function(){
       console.log(online);
       led.writeSync(online);
     }
-
+    previous_online = online;
   });
 },1000);
