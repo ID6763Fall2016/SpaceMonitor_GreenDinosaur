@@ -23,7 +23,7 @@ var button = new GPIO(17, 'in', 'both');
 
 /******* Check Internet Connection Status *******/
 var previous_online_status = false;
-var online_check_interval = 1;  % minutes
+var online_check_interval = 1;  // minutes
 
 setInterval(function(){
   var isOnline = require('is-online');
