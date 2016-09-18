@@ -27,7 +27,7 @@ var previous_online = false;
 setInterval(function(){
   var isOnline = require('is-online');
   isOnline(function(err, online) {
-    if (online ~= previous_online) {
+    if (online != previous_online) {
       console.log(online);
       led.writeSync(online);
     }
