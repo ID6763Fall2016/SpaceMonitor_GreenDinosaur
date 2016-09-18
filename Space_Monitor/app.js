@@ -22,18 +22,16 @@ var led = new GPIO(18, 'out');
 // var button = new GPIO(17, 'in', 'both');
 
 
-var previous_online = false;
-var LED_status = 0;
+var previous_online_status = false;
 
 setInterval(function(){
   var isOnline = require('is-online');
   isOnline(function(err, online) {
     // only make changes to LED when something changes in connectivity
-    if (online != previous_online) {
+    if (online != previous_online_status) {
       console.log(online);
-      LED_status = online ? 1 : 0;
-      led.writeSync(LED_status);
+      led.writeSync(online ? 0 : 1);
     }
-    previous_online = online;
+    previous_online_status = online;
   });
 },1000);
