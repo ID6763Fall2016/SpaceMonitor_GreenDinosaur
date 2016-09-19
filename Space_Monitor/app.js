@@ -27,7 +27,7 @@ var button_door = new GPIO(17, 'in', 'rising', { persistentWatch: true, debounce
 
 /******* Check Internet Connection Status *******/
 var previous_online_status = false;
-var online_check_interval = 1;  // minutes
+var online_check_interval = 0.5;  // minutes
 
 setInterval(function(){
   var isOnline = require('is-online');
@@ -67,7 +67,7 @@ button_door.watch(count_door_openings);
 var dht_sensor = require('node-dht-sensor');
 var DHT_sensor_value;
 
-var dht_sensor_interval = 1;    // minutes
+var dht_sensor_interval = 1/60;    // minutes
 
 if (dht_sensor.initialize(22, 4)) {
   setInterval(function(){
@@ -84,12 +84,45 @@ else {
 
 
 
+/******* Database *******/
+var DatabaseEngine = require('tingodb')();
 
+// create database in folder /db
+var database = new DatabaseEngine.Db(__dirname + '/db',{});
 
+// add data to the table every 1000ms
+setInterval(function(){
+	var sampleCollection = database.collection('somestuff');
+	sampleCollection.insert({
+		"sensorvalue" : Math.random() * 100,
+		"datetime" : new Date()
+	});
+	console.log("added a sample");
+},1000);
 
+// retrieve last N data
+var getLatestSamples = function(theCount,callback){
+	var sampleCollection = database.collection('somestuff');
+	sampleCollection
+		.find()
+		.sort({"datetime":-1})
+		.limit(theCount)
+		.toArray(function(err,docList){
+			callback(docList);
+		});
+};
 
-
-
+// retrieve 5 records every 3000ms
+setInterval(function(){
+	getLatestSamples(5,function(results){
+		var theValues = []
+		for(var i=0; i<results.length; i++)
+		{
+			theValues.push(results[i].sensorvalue);
+		}
+		console.log(theValues);
+	});
+}, 3000);
 
 
 /******* Assess status of Cafe *******/
