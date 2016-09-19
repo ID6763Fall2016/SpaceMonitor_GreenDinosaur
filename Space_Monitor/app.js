@@ -123,12 +123,16 @@ var getLatestSamples = function(theCount,callback){
 // retrieve 5 records every 3000ms
 setInterval(function(){
 	getLatestSamples(5,function(results){
-		var theValues = []
+    var temperature_values = [];
+    var humidity_values = [];
+    var datetime_values = [];
 		for(var i=0; i<results.length; i++)
 		{
-			theValues.push(results[i].sensorvalue);
+			temperature_values.push(results[i].temperature);
+      humidity_values.push(results[i].humidity);
+      datetime_values.push(results[i].datetime);
 		}
-		console.log(theValues);
+		console.log(humidity_values);
 	});
 }, 3000);
 
