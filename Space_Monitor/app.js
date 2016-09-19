@@ -2,26 +2,31 @@ var assert = require('assert');
 
 /****** Express Web Server ******/
 var express = require('express');
-var server = express();
+var ExpressServer = express();
 
 // serve static pages in public_html folder
-server.use(express.static(__dirname + '/public_html'));
+ExpressServer.use(express.static(__dirname + '/public_html'));
 
 // bind server to port 3000
-server.listen(3000, function () {
+ExpressServer.listen(3000, function () {
   console.log('Express Server listening on port 3000');
 });
 
-server.get('/', function (req, res) {
+ExpressServer.get('/', function (req, res) {
   res.send('Café Scout Homepage');
 });
 
-server.get('/DHTsensor', function (req, res) {
+ExpressServer.get('/DHTsensor', function (req, res) {
   res.send(DHT_sensor_string);
 });
 
+ExpressServer.get('/chart', function (req, res) {
+  res.sendfile(__dirname + '/public_html/index-tingosocketchart.html');
+});
+
 /******* WebSocket ******/
-var io = require('socket.io')(server);
+var HTTPserver = require('http').Server(ExpressServer);
+var io = require('socket.io')(HTTPserver);
 
 io.on('connection', function (socket) {
   console.log("user connected to socket");
