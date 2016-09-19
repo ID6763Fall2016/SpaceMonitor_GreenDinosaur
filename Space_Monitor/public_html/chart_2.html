@@ -40,14 +40,6 @@
 
 		var initLineChart = function(graph_data) {
 
-
-			var randomColorFactor = function() {
-				return Math.round(Math.random() * 255);
-			};
-			var randomColor = function(opacity) {
-				return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',' + (opacity || '.3') + ')';
-			};
-
 			var config = {
 				type: 'line',
 				data: {
@@ -91,10 +83,10 @@
 			};
 
 			$.each(config.data.datasets, function(i, dataset) {
-				dataset.borderColor = randomColor(0.4);
-				dataset.backgroundColor = randomColor(0.5);
-				dataset.pointBorderColor = randomColor(0.7);
-				dataset.pointBackgroundColor = randomColor(0.5);
+				dataset.borderColor = rgba(120, 85, 200, 0.3);
+				dataset.backgroundColor = rgba(200, 125, 80, 0.5);
+				dataset.pointBorderColor = rgba(100, 185, 30, 0.7);
+				dataset.pointBackgroundColor = rgba(25, 250, 100, 0.5);
 				dataset.pointBorderWidth = 1;
 			});
 
