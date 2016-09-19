@@ -15,7 +15,7 @@ server.get('/', function (req, res) {
 });
 
 server.get('/DHTsensor', function (req, res) {
-  res.send(DHT_sensor_value);
+  res.send(DHT_sensor_string);
 });
 
 /******* GPIO ******/
@@ -64,16 +64,22 @@ button_door.watch(count_door_openings);
 
 
 /******* Humidity/Temperature Sensor *******/
-var dht_sensor = require('node-dht-sensor');
-var DHT_sensor_value;
+var DHT_sensor = require('node-dht-sensor');
+
+var DHT_sensor_temp = -1;
+var DHT_sensor_hum = -1;
+
+var DHT_sensor_string;
 
 var dht_sensor_interval = 1/60;    // minutes
 
 if (dht_sensor.initialize(22, 4)) {
   setInterval(function(){
-    var readout = dht_sensor.read();
-    DHT_sensor_value = 'Temperature: ' + readout.temperature.toFixed(2) + 'C, ' + 'humidity: ' + readout.humidity.toFixed(2) + '%';
-    console.log(DHT_sensor_value);
+    var readout = DHT_sensor.read();
+    DHT_sensor_temp = readout.temperature.toFixed(2);
+    DHT_sensor_hum = readout.humidity.toFixed(2);
+    DHT_sensor_string = 'Temperature: ' + DHT_sensor_temp + 'C, ' + 'humidity: ' + DHT_sensor_hum + '%';
+    console.log(DHT_sensor_string);
   }, dht_sensor_interval*60000);
 }
 else {
@@ -94,7 +100,8 @@ var database = new DatabaseEngine.Db(__dirname + '/db',{});
 setInterval(function(){
 	var sampleCollection = database.collection('somestuff');
 	sampleCollection.insert({
-		"sensorvalue" : Math.random() * 100,
+    "temperature" : DHT_sensor_temp,
+    "humidity" : DHT_sensor_hum,
 		"datetime" : new Date()
 	});
 	console.log("added a sample");
@@ -112,19 +119,19 @@ var getLatestSamples = function(theCount,callback){
 		});
 };
 
-setTimeout(function() {
-  // retrieve 5 records every 3000ms
-  setInterval(function(){
-  	getLatestSamples(5,function(results){
-  		var theValues = []
-  		for(var i=0; i<results.length; i++)
-  		{
-  			theValues.push(results[i].sensorvalue);
-  		}
-  		console.log(theValues);
-  	});
-  }, 3000);
-}, 5000);
+
+// retrieve 5 records every 3000ms
+setInterval(function(){
+	getLatestSamples(5,function(results){
+		var theValues = []
+		for(var i=0; i<results.length; i++)
+		{
+			theValues.push(results[i].sensorvalue);
+		}
+		console.log(theValues);
+	});
+}, 3000);
+
 
 
 

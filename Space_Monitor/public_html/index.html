@@ -1,0 +1,22 @@
+<script src="/socket.io/socket.io.js"></script>
+<script>
+	var socket = io();
+	var myList;
+
+	window.onload = function(){
+		myList = document.createElement("div");
+		myList.setAttribute("id","theList");
+		document.body.appendChild(myList);
+	};
+
+	socket.on('messageFromServerToClient', function(incomingData) {
+		console.log(incomingData);
+		socket.emit('messageFromClientToServer', "received: "+incomingData);
+
+		var myItem = document.createElement("li");
+		var myText = document.createTextNode(incomingData);
+		myItem.appendChild(myText);
+		myList.appendChild(myItem);
+	});
+
+</script>
