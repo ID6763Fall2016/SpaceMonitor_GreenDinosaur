@@ -14,15 +14,15 @@ server.get('/', function (req, res) {
   res.send('Café Scout Homepage');
 });
 
+server.get('/DHTsensor', function (req, res) {
+  res.send(DHT_sensor_value);
+});
 
 /******* GPIO ******/
 // button is attaced to pin 17, LED to 18
 var GPIO = require('onoff').Gpio;
 var LED_connection_status = new GPIO(18, 'out');  // gpio 18, output
-var button = new GPIO(17, 'in', 'rising', { persistentWatch: true, debounceTimeout: 1000 }); // gpio 17, input, rising edge interrupts only, enable button to work on consecutive pushes, debounce for 1 second
-
-
-
+var button_door = new GPIO(17, 'in', 'rising', { persistentWatch: true, debounceTimeout: 1000 }); // gpio 17, input, rising edge interrupts only, enable button to work on consecutive pushes, debounce for 1 second
 
 
 /******* Check Internet Connection Status *******/
@@ -60,20 +60,20 @@ setInterval(function(){
 },door_interval*60000);
 
 // watch for Door opening actions and call callback function
-button.watch(count_door_openings);
-
-
+button_door.watch(count_door_openings);
 
 
 /******* Humidity/Temperature Sensor *******/
 var dht_sensor = require('node-dht-sensor');
+var DHT_sensor_value;
 
-var dht_sensor_interval = 1/60;
+var dht_sensor_interval = 1;    // minutes
 
 if (dht_sensor.initialize(22, 4)) {
   setInterval(function(){
     var readout = dht_sensor.read();
-    console.log('Temperature: ' + readout.temperature.toFixed(2) + 'C, ' + 'humidity: ' + readout.humidity.toFixed(2) + '%');
+    DHT_sensor_value = 'Temperature: ' + readout.temperature.toFixed(2) + 'C, ' + 'humidity: ' + readout.humidity.toFixed(2) + '%';
+    console.log(DHT_sensor_value);
   }, dht_sensor_interval*60000);
 }
 else {
