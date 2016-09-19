@@ -112,17 +112,21 @@ var getLatestSamples = function(theCount,callback){
 		});
 };
 
-// retrieve 5 records every 3000ms
-setInterval(function(){
-	getLatestSamples(5,function(results){
-		var theValues = []
-		for(var i=0; i<results.length; i++)
-		{
-			theValues.push(results[i].sensorvalue);
-		}
-		console.log(theValues);
-	});
-}, 3000);
+setTimeout(function() {
+  // retrieve 5 records every 3000ms
+  setInterval(function(){
+  	getLatestSamples(5,function(results){
+  		var theValues = []
+  		for(var i=0; i<results.length; i++)
+  		{
+  			theValues.push(results[i].sensorvalue);
+  		}
+  		console.log(theValues);
+  	});
+  }, 3000);
+}, 5000);
+
+
 
 
 /******* Assess status of Cafe *******/
