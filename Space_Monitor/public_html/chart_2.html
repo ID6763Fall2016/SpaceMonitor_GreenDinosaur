@@ -26,7 +26,7 @@
 			initLineChart(sensor_data);
 		}
 
-		var sensor_data = Array.fill(0);
+		var sensor_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 		var socket = io();
 
 		socket.on('latestSamples', function(incomingData) {
