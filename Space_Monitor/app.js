@@ -42,7 +42,7 @@ io.on('connection', function(socket) {
                 values.push(results[i].humidity);
             }
             socket.emit('latestSamples', values);
-            console.log("sent: " + values);
+            console.log("sent    : " + values);
         });
     }, 1000);
 
