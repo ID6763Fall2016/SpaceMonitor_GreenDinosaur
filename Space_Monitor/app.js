@@ -68,24 +68,16 @@ button.watch(count_door_openings);
 /******* Humidity/Temperature Sensor *******/
 var dht_sensor = require('node-dht-sensor');
 
-var sensor = {
-    initialize: function () {
-        return dht_sensor.initialize(22, 4);
-    },
-    read: function () {
-        var readout = dht_sensor.read();
-        console.log('Temperature: ' + readout.temperature.toFixed(2) + 'C, ' +
-            'humidity: ' + readout.humidity.toFixed(2) + '%');
-        setTimeout(function () {
-            sensor.read();
-        }, 2000);
-    }
-};
+var dht_sensor_interval = 1/60;
 
-if (sensor.initialize()) {
-    sensor.read();
-} else {
-    console.warn('Failed to initialize sensor');
+if (dht_sensor.initialize(22, 4)) {
+  setInterval(function(){
+    var readout = dht_sensor.read();
+    console.log('Temperature: ' + readout.temperature.toFixed(2) + 'C, ' + 'humidity: ' + readout.humidity.toFixed(2) + '%');
+  }, dht_sensor_interval*60000);
+}
+else {
+  console.warn('Failed to initialize DHT sensor');
 }
 
 
