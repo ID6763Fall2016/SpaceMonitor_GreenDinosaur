@@ -110,7 +110,7 @@ var DHT_sensor_hum = -1;
 
 var DHT_sensor_string;
 
-var DHT_sensor_interval = 1 / 60; // minutes
+var DHT_sensor_interval = 500; // ms
 
 if (DHT_sensor.initialize(22, 4)) {
     setInterval(function() {
@@ -118,8 +118,8 @@ if (DHT_sensor.initialize(22, 4)) {
         DHT_sensor_temp = readout.temperature.toFixed(2);
         DHT_sensor_hum = readout.humidity.toFixed(2);
         DHT_sensor_string = 'Temperature: ' + DHT_sensor_temp + 'C, ' + 'humidity: ' + DHT_sensor_hum + '%';
-        console.log(DHT_sensor_string);
-    }, DHT_sensor_interval * 60000);
+        //console.log(DHT_sensor_string);
+    }, DHT_sensor_interval);
 } else {
     console.warn('Failed to initialize DHT sensor');
 }
@@ -139,11 +139,11 @@ var insertSample = function(new_sample) {
     sampleCollection.insert(new_sample,
         function(err, docResult) {
             assert.equal(err, null);
-            console.log("added a sample to DB");
+            //console.log("added a sample to DB");
         });
 }
 
-// add data to the table every 1000ms
+// add data to the table every 500ms
 setInterval(function() {
     var new_sample = {
         "temperature": DHT_sensor_temp,
@@ -151,7 +151,7 @@ setInterval(function() {
         "datetime": new Date()
     };
     insertSample(new_sample);
-}, 1000);
+}, 500);
 
 // retrieve last N data
 var getLatestSamples = function(theCount, callback) {
@@ -168,20 +168,20 @@ var getLatestSamples = function(theCount, callback) {
 };
 
 
-// retrieve 5 records every 3000ms
-setInterval(function() {
-    getLatestSamples(5, function(results) {
-        var temperature_values = [];
-        var humidity_values = [];
-        var datetime_values = [];
-        for (var i = 0; i < results.length; i++) {
-            temperature_values.push(results[i].temperature);
-            humidity_values.push(results[i].humidity);
-            datetime_values.push(results[i].datetime);
-        }
-        console.log(humidity_values);
-    });
-}, 3000);
+// // retrieve 5 records every 3000ms
+// setInterval(function() {
+//     getLatestSamples(5, function(results) {
+//         var temperature_values = [];
+//         var humidity_values = [];
+//         var datetime_values = [];
+//         for (var i = 0; i < results.length; i++) {
+//             temperature_values.push(results[i].temperature);
+//             humidity_values.push(results[i].humidity);
+//             datetime_values.push(results[i].datetime);
+//         }
+//         console.log(humidity_values);
+//     });
+// }, 3000);
 
 
 
