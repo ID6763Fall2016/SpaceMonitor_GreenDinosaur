@@ -9,7 +9,7 @@ var HTTPserver = require('http').Server(ExpressServer);
 //ExpressServer.use(express.static(__dirname + '/public_html'));
 
 // bind server to port 3000
-HTTPServer.listen(3000, function () {
+HTTPserver.listen(3000, function () {
   console.log('Express Server listening on port 3000');
 });
 
