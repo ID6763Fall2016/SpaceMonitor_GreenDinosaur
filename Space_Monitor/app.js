@@ -1,3 +1,5 @@
+var assert = require('assert');
+
 /****** Express Web Server ******/
 var express = require('express');
 var server = express();
@@ -17,6 +19,36 @@ server.get('/', function (req, res) {
 server.get('/DHTsensor', function (req, res) {
   res.send(DHT_sensor_string);
 });
+
+/******* WebSocket ******/
+var io = require('socket.io')(server);
+
+io.on('connection', function (socket) {
+  console.log("user connected to socket");
+
+  socket.on('messageFromClientToServer', function(data){
+    console.log(data);
+  });
+
+   var sendLatestSamples = setInterval(function(){
+     getLatestSamples(100,function(results){
+       var values = []
+       for(var i = 0; i < results.length; i++)
+       {
+         values.push(results[i].value);
+       }
+       socket.emit('latestSamples', values);
+       console.log(values);
+     });
+   },1000);
+
+   socket.on('disconnect', function(){
+     console.log("user disconnected from socket");
+     clearInterval(sendLatestSamples);
+   });
+});
+
+
 
 /******* GPIO ******/
 // button is attaced to pin 17, LED to 18
@@ -96,15 +128,23 @@ var DatabaseEngine = require('tingodb')();
 // create database in folder /db
 var database = new DatabaseEngine.Db(__dirname + '/db',{});
 
+var insertSample = function(new_sample) {
+  var sampleCollection = database.collection('somestuff');
+	sampleCollection.insert(new_sample,
+  function (err, docResult) {
+    assert.equal(err, null);
+    console.log("added a sample to DB");
+  });
+}
+
 // add data to the table every 1000ms
 setInterval(function(){
-	var sampleCollection = database.collection('somestuff');
-	sampleCollection.insert({
+  var new_sample = {
     "temperature" : DHT_sensor_temp,
     "humidity" : DHT_sensor_hum,
 		"datetime" : new Date()
-	});
-	console.log("added a sample");
+	};
+  insertSample(new_sample);
 },1000);
 
 // retrieve last N data
