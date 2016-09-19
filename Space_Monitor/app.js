@@ -21,7 +21,7 @@ ExpressServer.get('/DHTsensor', function (req, res) {
 });
 
 ExpressServer.get('/chart', function (req, res) {
-  res.sendfile(__dirname + '/public_html/index-tingosocketchart.html');
+  res.sendFile(__dirname + '/public_html/index-tingosocketchart.html');
 });
 
 /******* WebSocket ******/
