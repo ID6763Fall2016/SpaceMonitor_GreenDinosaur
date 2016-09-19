@@ -36,7 +36,7 @@ io.on('connection', function(socket) {
     });
 
     var sendLatestSamples = setInterval(function() {
-        getLatestSamples(100, function(results) {
+        getLatestSamples(10, function(results) {
             var values = []
             for (var i = 0; i < results.length; i++) {
                 values.push(results[i].humidity);
