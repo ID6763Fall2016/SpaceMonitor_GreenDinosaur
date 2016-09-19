@@ -115,8 +115,8 @@ var DHT_sensor_interval = 500; // ms
 if (DHT_sensor.initialize(22, 4)) {
     setInterval(function() {
         var readout = DHT_sensor.read();
-        DHT_sensor_temp = readout.temperature.toFixed(2);
-        DHT_sensor_hum = readout.humidity.toFixed(2);
+        DHT_sensor_temp = readout.temperature.toFixed(1);
+        DHT_sensor_hum = readout.humidity.toFixed(1);
         DHT_sensor_string = 'Temperature: ' + DHT_sensor_temp + 'C, ' + 'humidity: ' + DHT_sensor_hum + '%';
         //console.log(DHT_sensor_string);
     }, DHT_sensor_interval);
