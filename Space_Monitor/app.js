@@ -3,12 +3,13 @@ var assert = require('assert');
 /****** Express Web Server ******/
 var express = require('express');
 var ExpressServer = express();
+var HTTPserver = require('http').Server(ExpressServer);
 
 // serve static pages in public_html folder
 //ExpressServer.use(express.static(__dirname + '/public_html'));
 
 // bind server to port 3000
-ExpressServer.listen(3000, function () {
+HTTPServer.listen(3000, function () {
   console.log('Express Server listening on port 3000');
 });
 
@@ -25,7 +26,6 @@ ExpressServer.get('/chart', function (req, res) {
 });
 
 /******* WebSocket ******/
-var HTTPserver = require('http').Server(ExpressServer);
 var io = require('socket.io')(HTTPserver);
 
 io.on('connection', function (socket) {
