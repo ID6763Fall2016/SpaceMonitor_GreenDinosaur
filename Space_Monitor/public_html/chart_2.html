@@ -5,6 +5,7 @@
 	<title> Animation Callbacks </title>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.2/Chart.bundle.js"></script>
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
 	<style>
 		canvas {
 			-moz-user-select: none;
@@ -21,68 +22,84 @@
 	<br>
 	<br>
 	<script>
-		var randomColorFactor = function() {
-			return Math.round(Math.random() * 255);
-		};
-		var randomColor = function(opacity) {
-			return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',' + (opacity || '.3') + ')';
-		};
+		window.onload = function() {
+			initLineChart(sensor_data);
+		}
 
+		var sensor_data = Array.fill(0);
+		var socket = io();
 
-		var config = {
-			type: 'line',
-			data: {
-				labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-				datasets: [{
-					label: "My First dataset ",
-					data: Array(10).fill(0),
-					fill: false,
-					borderDash: [5, 5],
-				}, {
-					label: "My Second dataset ",
-					data: Array(10).fill(2),
-					fill: true,
-					borderDash: [10, 10],
-				}]
-			},
-			options: {
-				title: {
-					display: true,
-					text: "Cafe data"
-				},
-				tooltips: {
-					mode: 'label',
-				},
-				scales: {
-					xAxes: [{
-						scaleLabel: {
-							show: true,
-							labelString: 'Month'
-						}
-					}],
-					yAxes: [{
-						scaleLabel: {
-							show: true,
-							labelString: 'Value'
-						},
-					}]
-				}
-			}
-		};
+		socket.on('latestSamples', function(incomingData) {
+			console.log(incomingData);
+			socket.emit('messageFromClientToServer', "received: " + incomingData);
 
-		$.each(config.data.datasets, function(i, dataset) {
-			dataset.borderColor = randomColor(0.4);
-			dataset.backgroundColor = randomColor(0.5);
-			dataset.pointBorderColor = randomColor(0.7);
-			dataset.pointBackgroundColor = randomColor(0.5);
-			dataset.pointBorderWidth = 1;
+			sensor_data = incomingData;
+
+			initLineChart(sensor_data);
 		});
 
-		window.onload = function() {
+		var initLineChart = function(graph_data) {
+
+
+			var randomColorFactor = function() {
+				return Math.round(Math.random() * 255);
+			};
+			var randomColor = function(opacity) {
+				return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',' + (opacity || '.3') + ')';
+			};
+
+			var config = {
+				type: 'line',
+				data: {
+					labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+					datasets: [{
+						label: "My First dataset ",
+						data: graph_data,
+						fill: false,
+						borderDash: [5, 5],
+					}, {
+						label: "My Second dataset ",
+						data: graph_data,
+						fill: true,
+						borderDash: [10, 10],
+					}]
+				},
+				options: {
+					title: {
+						display: true,
+						text: "Cafe data"
+					},
+					tooltips: {
+						mode: 'label',
+					},
+					scales: {
+						xAxes: [{
+							scaleLabel: {
+								show: true,
+								labelString: 'Month'
+							}
+						}],
+						yAxes: [{
+							scaleLabel: {
+								show: true,
+								labelString: 'Value'
+							},
+						}]
+					}
+				}
+			};
+
+			$.each(config.data.datasets, function(i, dataset) {
+				dataset.borderColor = randomColor(0.4);
+				dataset.backgroundColor = randomColor(0.5);
+				dataset.pointBorderColor = randomColor(0.7);
+				dataset.pointBackgroundColor = randomColor(0.5);
+				dataset.pointBorderWidth = 1;
+			});
 
 			var ctx = document.getElementById("canvas").getContext("2d");
 			window.myLine = new Chart(ctx, config);
-		};
+		}
 	</script>
 </body>
 
