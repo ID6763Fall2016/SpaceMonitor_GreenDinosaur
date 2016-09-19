@@ -71,16 +71,16 @@ var DHT_sensor_hum = -1;
 
 var DHT_sensor_string;
 
-var dht_sensor_interval = 1/60;    // minutes
+var DHT_sensor_interval = 1/60;    // minutes
 
-if (dht_sensor.initialize(22, 4)) {
+if (DHT_sensor.initialize(22, 4)) {
   setInterval(function(){
     var readout = DHT_sensor.read();
     DHT_sensor_temp = readout.temperature.toFixed(2);
     DHT_sensor_hum = readout.humidity.toFixed(2);
     DHT_sensor_string = 'Temperature: ' + DHT_sensor_temp + 'C, ' + 'humidity: ' + DHT_sensor_hum + '%';
     console.log(DHT_sensor_string);
-  }, dht_sensor_interval*60000);
+  }, DHT_sensor_interval*60000);
 }
 else {
   console.warn('Failed to initialize DHT sensor');
