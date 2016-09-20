@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title> Animation Callbacks </title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.2/Chart.bundle.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<style>
+		canvas {
+			-moz-user-select: none;
+			-webkit-user-select: none;
+			-ms-user-select: none;
+		}
+	</style>
+</head>
+
+<body>
+	<div style="width: 75%;">
+		<canvas id="canvas"></canvas>
+	</div>
+	<br>
+	<br>
+	<script>
+		window.onload = function() {
+			initLineChart(sensor_data);
+		}
+
+		var sensor_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+		var socket = io();
+
+		socket.on('latestSamples', function(incomingData) {
+			console.log(incomingData);
+			socket.emit('messageFromClientToServer', "received: " + incomingData);
+
+			sensor_data = incomingData;
+
+			initLineChart(sensor_data);
+		});
+
+		var initLineChart = function(graph_data) {
+
+			var config = {
+				type: 'line',
+				data: {
+					labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+					datasets: [{
+						label: "My First dataset ",
+						data: graph_data,
+						fill: false,
+						borderDash: [5, 5],
+					}, {
+						label: "My Second dataset ",
+						data: graph_data,
+						fill: true,
+						borderDash: [10, 10],
+					}]
+				},
+				options: {
+					animation: false,
+					title: {
+						display: true,
+						text: "Cafe data"
+					},
+					tooltips: {
+						mode: 'label',
+					},
+					scales: {
+						xAxes: [{
+							scaleLabel: {
+								show: true,
+								labelString: 'Month'
+							}
+						}],
+						yAxes: [{
+							scaleLabel: {
+								show: true,
+								labelString: 'Value'
+							},
+						}]
+					}
+				}
+			};
+
+			$.each(config.data.datasets, function(i, dataset) {
+				dataset.borderColor = 'rgba(120, 85, 200, 0.3)';
+				dataset.backgroundColor = 'rgba(200, 125, 80, 0.5)';
+				dataset.pointBorderColor = 'rgba(100, 185, 30, 0.7)';
+				dataset.pointBackgroundColor = 'rgba(25, 250, 100, 0.5)';
+				dataset.pointBorderWidth = 1;
+			});
+
+			var ctx = document.getElementById("canvas").getContext("2d");
+			window.myLine = new Chart(ctx, config);
+		}
+	</script>
+</body>
+
+</html>
