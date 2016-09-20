@@ -29,11 +29,8 @@
 		</div>
 	</div>
 	<div id="block_container">
-		<div id="block1">
+		<div id="block3">
 			<canvas id="canvas3"></canvas>
-		</div>
-		<div id="block2">
-			<canvas id="canvas4"></canvas>
 		</div>
 	</div>
 
@@ -41,10 +38,23 @@
 
 	<script>
 		window.onload = function() {
-			initLineChart(sensor_data);
+			initCharts(sensor_data_1, sensor_data_2, sensor_data_3, sensor_data_4);
 		}
 
-		var sensor_data = [30];
+
+
+		var img_person = new Image(50, 50);
+		img_person.src = 'https://i.imgur.com/yDYW1I7.png';
+
+
+
+
+
+		var sensor_data_1 = [25]; // temperature (C)
+		var sensor_data_2 = [50]; // humidity 0-100 (%)
+		var sensor_data_3 = [30]; // occupancy/door openings
+		var sensor_data_4 = [70]; // light 0-100 (%)
+
 		// var socket = io();
 		//
 		// socket.on('latestSamples', function(incomingData) {
@@ -52,21 +62,30 @@
 		// 	socket.emit('messageFromClientToServer', "received: " + incomingData);
 		//
 		// 	sensor_data = incomingData;
+		// //@TODO de-interleave data
 		//
-		// 	initLineChart(sensor_data);
+		// 	initCharts(sensor_data_1, sensor_data_2, sensor_data_3, sensor_data_4);
 		// });
 
+		var randomScalingFactor = function() {
+			return (Math.random() > 0.5 ? 1.0 : -1.0) * Math.round(Math.random() * 100);
+		};
+
+		var map_values = function(x, x_start, x_end, y_start, y_end) {
+			// map x in [x_start, x_end] to y in [y_start, y_end]
+			return (x - x_start) / (x_end - x_start) * (y_end - y_start) + y_start;
+		}
+
 		var temperature_to_nm = function(celsius) {
-			//map 15->35 to 450->650 nm
+			//map [15,35] C to [450,650] nm
 			if (celsius < 15) {
 				celsius = 15;
 			}
 			if (celsius > 35) {
 				celsius = 35;
 			}
-			return (celsius - 15) / (35 - 15) * (650 - 450) + 450;
+			return map_values(celsius, 15, 35, 450, 650);
 		}
-
 
 		nmToRGBA = function(wavelength) {
 			var Gamma = 0.80,
@@ -125,17 +144,68 @@
 
 
 
-		var initLineChart = function(graph_data) {
+		var make_drops = function(humidity) {
+			var n_drops = Math.round(Math.pow(2, map_values(humidity, 0, 100, 0, 8)));
 
-			var rgba_string = nmToRGBA(temperature_to_nm(graph_data));
+			var drops_dataset = [];
+			for (var i = 0; i < n_drops; i++) {
+				drops_dataset.push({
+					x: randomScalingFactor(),
+					y: randomScalingFactor(),
+					r: Math.abs(randomScalingFactor()) / 5,
+				});
+			}
+			return drops_dataset;
+		}
 
-			var config = {
+
+		var make_people = function(occupancy) {
+			var n_people = map_values(occupancy, 0, 100, 0, 100);
+
+			var occupancy_dataset = [];
+			for (var i = 0; i < n_people; i++) {
+				occupancy_dataset.push({
+					x: randomScalingFactor(),
+					y: randomScalingFactor(),
+				});
+			}
+			return occupancy_dataset;
+		}
+
+
+		var set_light = function(light_level) {
+
+			var r = Math.round(map_values(light_level, 0, 100, 0, 255)),
+				g = Math.round(map_values(light_level, 0, 100, 0, 255)),
+				b = Math.round(map_values(light_level, 0, 100, 0, 255));
+			document.body.style.background = "rgba(" + r + "," + g + "," + b + ", 1)";
+		}
+
+
+
+
+		var initCharts = function(graph_data_1, graph_data_2, graph_data_3, graph_data_4) {
+
+
+			var temperature = graph_data_1;
+			var rgba_string = nmToRGBA(temperature_to_nm(temperature));
+
+			var humidity = graph_data_2;
+			var drops_dataset = make_drops(humidity);
+
+			var occupancy = graph_data_3;
+			var occupancy_dataset = make_people(occupancy);
+
+			set_light(graph_data_4);
+
+
+			var config1 = {
 				type: 'bar',
 				data: {
 					labels: [""],
 					datasets: [{
-						label: "Temperature",
-						data: graph_data,
+						label: "Temperature Dataset",
+						data: temperature,
 						backgroundColor: rgba_string,
 					}]
 				},
@@ -175,10 +245,111 @@
 				}
 			};
 
+			var config2 = {
+				type: 'bubble',
+				data: {
+					labels: [""],
+					datasets: [{
+						label: "Humidity Dataset",
+						data: drops_dataset,
+						backgroundColor: 'rgba(0, 50, 200, 0.5)',
+					}],
+				},
+				options: {
+					animation: false,
+					title: {
+						display: true,
+						text: "Humidity"
+					},
+					legend: {
+						display: false,
+					},
+					tooltips: {
+						//enabled: false,
+					},
+					scales: {
+						xAxes: [{
+							display: false,
+							gridLines: {
+								display: false,
+							},
+							scaleLabel: {
+								show: false,
+							}
+						}],
+						yAxes: [{
+							display: false,
+							gridLines: {
+								display: false,
+							},
+							scaleLabel: {
+								show: true,
+								labelString: 'Value'
+							},
+						}]
+					}
+				}
+			};
+
+
+
+			var config3 = {
+				type: 'scatter',
+				data: {
+					labels: [""],
+					datasets: [{
+						label: "Occupancy Dataset",
+						data: occupancy_dataset,
+						backgroundColor: 'rgba(0, 0, 0, 0.0)',
+						borderColor: 'rgba(0, 0, 0, 0.0)',
+						pointStyle: img_person,
+						radius: 10,
+						borderWidth: 1,
+					}],
+				},
+				options: {
+					animation: false,
+					title: {
+						display: true,
+						text: "Occupancy"
+					},
+					legend: {
+						display: false,
+					},
+					tooltips: {
+						//enabled: false,
+					},
+					scales: {
+						xAxes: [{
+							display: false,
+							gridLines: {
+								display: false,
+							},
+							scaleLabel: {
+								show: false,
+							}
+						}],
+						yAxes: [{
+							display: false,
+							gridLines: {
+								display: false,
+							},
+							scaleLabel: {
+								show: true,
+								labelString: 'Value'
+							},
+						}]
+					}
+				}
+			};
+
 			var ctx1 = document.getElementById("canvas1").getContext("2d");
-			window.myLine1 = new Chart(ctx1, config);
+			window.barChart = new Chart(ctx1, config1);
 			var ctx2 = document.getElementById("canvas2").getContext("2d");
-			window.myLine2 = new Chart(ctx2, config);
+			window.bubbleChart = new Chart(ctx2, config2);
+			var ctx3 = document.getElementById("canvas3").getContext("2d");
+			window.scatterChart = new Chart(ctx3, config3);
+
 		}
 	</script>
 </body>

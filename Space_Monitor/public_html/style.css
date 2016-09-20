@@ -7,16 +7,20 @@
 
 #block1
 {
-    display:inline-block;;
+    display:inline-block;
     width: 200px;
-    background-color: #f00
 }
 
 #block2
 {
-    display:inline-block;;
-    width: 100px;
-    background-color: #f00
+    display:inline-block;
+    width: 400px;
+}
+
+#block3
+{
+  display: inline-block;
+  width: 600px;
 }
 
 #canvas1, #canvas2
