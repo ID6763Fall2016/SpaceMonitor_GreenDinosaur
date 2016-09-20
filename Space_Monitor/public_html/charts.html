@@ -2,10 +2,14 @@
 <html>
 
 <head>
-	<title> Animation Callbacks </title>
+	<title> Cafe Monitor</title>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.2/Chart.bundle.js"></script>
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="style.css" />
+
+
 	<style>
 		canvas {
 			-moz-user-select: none;
@@ -16,63 +20,152 @@
 </head>
 
 <body>
-	<div style="width: 75%;">
-		<canvas id="canvas"></canvas>
+	<div id="block_container">
+		<div id="block1">
+			<canvas id="canvas1"></canvas>
+		</div>
+		<div id="block2">
+			<canvas id="canvas2"></canvas>
+		</div>
 	</div>
-	<br>
-	<br>
+	<div id="block_container">
+		<div id="block1">
+			<canvas id="canvas3"></canvas>
+		</div>
+		<div id="block2">
+			<canvas id="canvas4"></canvas>
+		</div>
+	</div>
+
+
+
 	<script>
 		window.onload = function() {
 			initLineChart(sensor_data);
 		}
 
-		var sensor_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-		var socket = io();
+		var sensor_data = [30];
+		// var socket = io();
+		//
+		// socket.on('latestSamples', function(incomingData) {
+		// 	console.log(incomingData);
+		// 	socket.emit('messageFromClientToServer', "received: " + incomingData);
+		//
+		// 	sensor_data = incomingData;
+		//
+		// 	initLineChart(sensor_data);
+		// });
 
-		socket.on('latestSamples', function(incomingData) {
-			console.log(incomingData);
-			socket.emit('messageFromClientToServer', "received: " + incomingData);
+		var temperature_to_nm = function(celsius) {
+			//map 15->35 to 450->650 nm
+			if (celsius < 15) {
+				celsius = 15;
+			}
+			if (celsius > 35) {
+				celsius = 35;
+			}
+			return (celsius - 15) / (35 - 15) * (650 - 450) + 450;
+		}
 
-			sensor_data = incomingData;
 
-			initLineChart(sensor_data);
-		});
+		nmToRGBA = function(wavelength) {
+			var Gamma = 0.80,
+				IntensityMax = 255,
+				factor, red, green, blue;
+			if ((wavelength >= 380) && (wavelength < 440)) {
+				red = -(wavelength - 440) / (440 - 380);
+				green = 0.0;
+				blue = 1.0;
+			} else if ((wavelength >= 440) && (wavelength < 490)) {
+				red = 0.0;
+				green = (wavelength - 440) / (490 - 440);
+				blue = 1.0;
+			} else if ((wavelength >= 490) && (wavelength < 510)) {
+				red = 0.0;
+				green = 1.0;
+				blue = -(wavelength - 510) / (510 - 490);
+			} else if ((wavelength >= 510) && (wavelength < 580)) {
+				red = (wavelength - 510) / (580 - 510);
+				green = 1.0;
+				blue = 0.0;
+			} else if ((wavelength >= 580) && (wavelength < 645)) {
+				red = 1.0;
+				green = -(wavelength - 645) / (645 - 580);
+				blue = 0.0;
+			} else if ((wavelength >= 645) && (wavelength < 781)) {
+				red = 1.0;
+				green = 0.0;
+				blue = 0.0;
+			} else {
+				red = 0.0;
+				green = 0.0;
+				blue = 0.0;
+			};
+			// Let the intensity fall off near the vision limits
+			if ((wavelength >= 380) && (wavelength < 420)) {
+				factor = 0.3 + 0.7 * (wavelength - 380) / (420 - 380);
+			} else if ((wavelength >= 420) && (wavelength < 701)) {
+				factor = 1.0;
+			} else if ((wavelength >= 701) && (wavelength < 781)) {
+				factor = 0.3 + 0.7 * (780 - wavelength) / (780 - 700);
+			} else {
+				factor = 0.0;
+			};
+			if (red !== 0) {
+				red = Math.round(IntensityMax * Math.pow(red * factor, Gamma));
+			}
+			if (green !== 0) {
+				green = Math.round(IntensityMax * Math.pow(green * factor, Gamma));
+			}
+			if (blue !== 0) {
+				blue = Math.round(IntensityMax * Math.pow(blue * factor, Gamma));
+			}
+			return "rgba(" + red + "," + green + "," + blue + "," + "1.0)";
+		}
+
+
 
 		var initLineChart = function(graph_data) {
 
+			var rgba_string = nmToRGBA(temperature_to_nm(graph_data));
+
 			var config = {
-				type: 'line',
+				type: 'bar',
 				data: {
-					labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+					labels: [""],
 					datasets: [{
-						label: "My First dataset ",
+						label: "Temperature",
 						data: graph_data,
-						fill: false,
-						borderDash: [5, 5],
-					}, {
-						label: "My Second dataset ",
-						data: graph_data,
-						fill: true,
-						borderDash: [10, 10],
+						backgroundColor: rgba_string,
 					}]
 				},
 				options: {
 					animation: false,
 					title: {
 						display: true,
-						text: "Cafe data"
+						text: "Temperature"
+					},
+					legend: {
+						display: false,
 					},
 					tooltips: {
-						mode: 'label',
+						//enabled: false,
 					},
 					scales: {
 						xAxes: [{
+							display: false,
+							gridLines: {
+								display: false,
+							},
 							scaleLabel: {
-								show: true,
-								labelString: 'Month'
+								show: false,
 							}
 						}],
 						yAxes: [{
+							display: false,
+							gridLines: {
+								display: false,
+							},
 							scaleLabel: {
 								show: true,
 								labelString: 'Value'
@@ -82,16 +175,10 @@
 				}
 			};
 
-			$.each(config.data.datasets, function(i, dataset) {
-				dataset.borderColor = 'rgba(120, 85, 200, 0.3)';
-				dataset.backgroundColor = 'rgba(200, 125, 80, 0.5)';
-				dataset.pointBorderColor = 'rgba(100, 185, 30, 0.7)';
-				dataset.pointBackgroundColor = 'rgba(25, 250, 100, 0.5)';
-				dataset.pointBorderWidth = 1;
-			});
-
-			var ctx = document.getElementById("canvas").getContext("2d");
-			window.myLine = new Chart(ctx, config);
+			var ctx1 = document.getElementById("canvas1").getContext("2d");
+			window.myLine1 = new Chart(ctx1, config);
+			var ctx2 = document.getElementById("canvas2").getContext("2d");
+			window.myLine2 = new Chart(ctx2, config);
 		}
 	</script>
 </body>
