@@ -12,6 +12,10 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/css/styles.css">
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.2/Chart.bundle.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
 </head>
 
 <body>
@@ -20,45 +24,55 @@
         <h2><a href="#">Caf&#233; Monitor</a></h2>
         <nav>
             <li><a href="index.html">Home</a></li>
-            <li><a href="monitor-live.html">Monitor</a></li>
+            <li><a href="monitor-live.html">Monitor Live</a></li>
+            <li><a href="monitor-details.html">Monitor Details</a></li>
             <li><a href="#">About</a></li>
         </nav>
     </header>
 
 
 
-    <section class="features">
-        <h3 class="title">Services</h3>
+    <section class="monitor-live">
+        <h3 class="title">Monitor Live</h3>
         <hr>
 
         <ul class="grid">
             <li>
-                <i class="fa fa-users"></i>
-                <h4>Cafe Commuters</h4>
-                <p>Check the environment of your local cafes. Enjoy your coffee.</p>
+                <h4 style="text-align:left;">Environment</h4>
+                <ul class="grid">
+                    <li style="padding: 0;text-align: left;"> Temperature
+                        <br>
+                        <div id="vartext-temperature" style="font-size:14px; color: rgba(125,127,128,1)">20&#186; C</div>
+                    </li>
+                    <li style="padding: 0;text-align: left;"> Humidity
+                        <br>
+                        <div id="vartext-humidity" style="font-size:14px; color: rgba(125,127,128,1)">70 %</div>
+                    </li>
+                </ul>
+                <canvas id="canvas-environment"></canvas>
             </li>
             <li>
-                <i class="fa fa-coffee"></i>
-                <h4>Cafe Owners</h4>
-                <p>Use our cafe environment sensor box. Get more happy customers.</p>
+                <h4 style="text-align:left;">Activity</h4>
+                <ul class="grid">
+                    <li style="flex-basis: 33%; padding: 0;text-align: left;"> Occupancy
+                        <br>
+                        <div id="vartext-occupancy" style="font-size:14px; color: rgba(125,127,128,1)">medium</div>
+                    </li>
+                    <li style="flex-basis: 33%; padding: 0;text-align: left;"> Luminocity
+                        <br>
+                        <div id="vartext-luminosity" style="font-size:14px; color: rgba(125,127,128,1)">bright</div>
+                    </li>
+                    <li style="flex-basis: 33%; padding: 0;text-align: left;">Noise
+                        <br>
+                        <div id="vartext-noise" style="font-size:14px; color: rgba(125,127,128,1)">quiet</div>
+                    </li>
+                </ul>
+                <canvas id="canvas-activity"></canvas>
             </li>
         </ul>
     </section>
 
 
-
-
-
-    <section class="contact">
-        <h3 class="title">Join our newsletter</h3>
-        <p>Get our latest news and notifications on release dates.</p>
-        <hr>
-
-        <form>
-            <input type="email" placeholder="Email">
-            <a href="#" class="btn">Subscribe now</a>
-        </form>
-    </section>
 
     <footer>
         <ul>
@@ -70,6 +84,330 @@
         <p>Made by John Kimions, Hareen Godthi, 2016.
     </footer>
 
+    <script>
+        window.onload = function() {
+            initCharts(sensor_data);
+        }
+
+        var img_person = new Image(50, 50);
+        img_person.src = '/assets/img/person_green.png';
+        var sensor_data = [
+            30, // temperature (C)
+            90, // humidity 0-100 (%)
+            1, // door openings
+            100, // light 0-100 (%)
+            25 // noise 0-100 (%)
+        ];
+
+        // var socket = io();
+        //
+        // socket.on('latestSamples', function(incomingData) {
+        // 	console.log(incomingData);
+        // 	socket.emit('messageFromClientToServer', "received: " + incomingData);
+        //
+        // 	sensor_data = incomingData;
+        // //@TODO de-interleave data
+        //
+        // 	initCharts(sensor_data);
+        // });
+
+
+
+        var randomScalingFactor = function() {
+            return (Math.random() > 0.5 ? 1.0 : -1.0) * Math.round(Math.random() * 100);
+        };
+
+        var map_values = function(x, x_start, x_end, y_start, y_end) {
+            // map x in [x_start, x_end] to y in [y_start, y_end]
+            return (x - x_start) / (x_end - x_start) * (y_end - y_start) + y_start;
+        }
+
+        var temperature_to_nm = function(celsius) {
+            //map [15,35] C to [450,650] nm
+            if (celsius < 15) {
+                celsius = 15;
+            }
+            if (celsius > 35) {
+                celsius = 35;
+            }
+            return map_values(celsius, 15, 35, 450, 650);
+        }
+
+        nmToRGBA = function(wavelength) {
+            var Gamma = 0.80,
+                IntensityMax = 255,
+                factor, red, green, blue;
+            if ((wavelength >= 380) && (wavelength < 440)) {
+                red = -(wavelength - 440) / (440 - 380);
+                green = 0.0;
+                blue = 1.0;
+            } else if ((wavelength >= 440) && (wavelength < 490)) {
+                red = 0.0;
+                green = (wavelength - 440) / (490 - 440);
+                blue = 1.0;
+            } else if ((wavelength >= 490) && (wavelength < 510)) {
+                red = 0.0;
+                green = 1.0;
+                blue = -(wavelength - 510) / (510 - 490);
+            } else if ((wavelength >= 510) && (wavelength < 580)) {
+                red = (wavelength - 510) / (580 - 510);
+                green = 1.0;
+                blue = 0.0;
+            } else if ((wavelength >= 580) && (wavelength < 645)) {
+                red = 1.0;
+                green = -(wavelength - 645) / (645 - 580);
+                blue = 0.0;
+            } else if ((wavelength >= 645) && (wavelength < 781)) {
+                red = 1.0;
+                green = 0.0;
+                blue = 0.0;
+            } else {
+                red = 0.0;
+                green = 0.0;
+                blue = 0.0;
+            };
+            // Let the intensity fall off near the vision limits
+            if ((wavelength >= 380) && (wavelength < 420)) {
+                factor = 0.3 + 0.7 * (wavelength - 380) / (420 - 380);
+            } else if ((wavelength >= 420) && (wavelength < 701)) {
+                factor = 1.0;
+            } else if ((wavelength >= 701) && (wavelength < 781)) {
+                factor = 0.3 + 0.7 * (780 - wavelength) / (780 - 700);
+            } else {
+                factor = 0.0;
+            };
+            if (red !== 0) {
+                red = Math.round(IntensityMax * Math.pow(red * factor, Gamma));
+            }
+            if (green !== 0) {
+                green = Math.round(IntensityMax * Math.pow(green * factor, Gamma));
+            }
+            if (blue !== 0) {
+                blue = Math.round(IntensityMax * Math.pow(blue * factor, Gamma));
+            }
+            return "rgba( " + red + ", " + green + ", " + blue + ", " + "1.0) ";
+        }
+
+
+        var set_temperature = function(temperature) {
+            var rgba_string = nmToRGBA(temperature_to_nm(temperature));
+            document.getElementById("canvas-environment").style.background = rgba_string;
+            document.getElementById("vartext-temperature").innerHTML = temperature + "&#186; C";
+        }
+
+        var set_humidity = function(humidity) {
+            document.getElementById("vartext-humidity").innerHTML = humidity + " %";
+
+            var n_drops = Math.round(Math.pow(2, map_values(humidity, 0, 100, 0, 8)));
+            var drops_dataset = [];
+            for (var i = 0; i < n_drops; i++) {
+                drops_dataset.push({
+                    x: randomScalingFactor(),
+                    y: randomScalingFactor(),
+                    r: Math.abs(randomScalingFactor()) / 5,
+                });
+            }
+            return drops_dataset;
+        }
+
+
+        var set_occupancy = function(n_people) {
+            // scale number of people to "occupancy percentage"
+            // for demo purposes, 5 people is full occupancy
+            var occupancy = map_values(n_people, 0, 5, 0, 100);
+
+            var occupancy_string = "";
+            if (occupancy < 10) {
+                occupancy_string = "low";
+            } else if (occupancy < 30) {
+                occupancy_string = "medium";
+            } else {
+                occupancy_string = "high";
+            }
+
+            document.getElementById("vartext-occupancy").innerHTML = occupancy_string;
+
+            var occupancy_dataset = [];
+            for (var i = 0; i < occupancy; i++) {
+                occupancy_dataset.push({
+                    x: randomScalingFactor(),
+                    y: randomScalingFactor(),
+                });
+            }
+            return occupancy_dataset;
+        }
+
+
+        var set_light = function(light_level) {
+            var gradientstart = "";
+            var gradientend = "";
+            var luminosity_string = "";
+            if (light_level < 33) {
+                gradientstart = "rgb(13,14,12)";
+                gradientend = "rgb(50,47,31)";
+                luminosity_string = "dark";
+            } else if (light_level < 66) {
+                gradientstart = "rgb(102,88,45)";
+                gradientend = "rgb(127,108,52)";
+                luminosity_string = "medium";
+            } else {
+                gradientstart = "rgb(179,149,62)";
+                gradientend = "rgb(245,210,19)";
+                luminosity_string = "bright";
+            }
+            document.documentElement.style.setProperty('--gradientstart', gradientstart);
+            document.documentElement.style.setProperty('--gradientend', gradientend);
+            document.getElementById("vartext-luminosity").innerHTML = luminosity_string;
+        }
+
+        set_noise = function(noise_level) {
+
+            var person_img_src = "";
+            var noise_string = "";
+            if (noise_level < 33) {
+                person_img_src = '/assets/img/person-level-1.png';
+                noise_string = "quiet";
+            } else if (noise_level < 66) {
+                person_img_src = '/assets/img/person-level-2.png';
+                noise_string = "medium";
+            } else {
+                person_img_src = '/assets/img/person-level-3.png';
+                noise_string = "loud";
+            }
+            document.getElementById("vartext-noise").innerHTML = noise_string;
+
+            return person_img_src;
+        }
+
+        var initCharts = function(graph_data) {
+
+
+            var temperature = graph_data[0];
+            set_temperature(temperature);
+
+            var humidity = graph_data[1];
+            var drops_dataset = set_humidity(humidity);
+
+            var occupancy = graph_data[2];
+            var occupancy_dataset = set_occupancy(occupancy);
+
+            var luminosity = graph_data[3];
+            set_light(luminosity);
+
+            var noise_level = graph_data[4];
+            img_person.src = set_noise(noise_level);
+
+
+            var config2 = {
+                type: 'bubble',
+                data: {
+                    labels: [" "],
+                    datasets: [{
+                        label: "Humidity Dataset ",
+                        data: drops_dataset,
+                        backgroundColor: 'rgba(197, 206, 201, 0.8)',
+                        borderColor: 'rgba(0, 0, 0, 0)',
+                    }],
+                },
+                options: {
+                    animation: false,
+                    title: {
+                        display: false,
+                        text: "Humidity "
+                    },
+                    legend: {
+                        display: false,
+                    },
+                    tooltips: {
+                        enabled: false,
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: false,
+                            gridLines: {
+                                display: false,
+                            },
+                            scaleLabel: {
+                                show: false,
+                            }
+                        }],
+                        yAxes: [{
+                            display: false,
+                            gridLines: {
+                                display: false,
+                            },
+                            scaleLabel: {
+                                show: true,
+                                labelString: 'Value'
+                            },
+                        }]
+                    }
+                }
+            };
+
+
+
+            var config3 = {
+                type: 'scatter',
+                data: {
+                    labels: [" "],
+                    datasets: [{
+                        label: "Occupancy Dataset ",
+                        data: occupancy_dataset,
+                        backgroundColor: 'rgba(0, 0, 0, 0.0)',
+                        borderColor: 'rgba(0, 0, 0, 0.0)',
+                        pointStyle: img_person,
+                        radius: 10,
+                        borderWidth: 1,
+                    }],
+                },
+                options: {
+                    animation: false,
+                    title: {
+                        display: false,
+                        text: "Occupancy "
+                    },
+                    legend: {
+                        display: false,
+                    },
+                    tooltips: {
+                        enabled: false,
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: false,
+                            gridLines: {
+                                display: false,
+                            },
+                            scaleLabel: {
+                                show: false,
+                            }
+                        }],
+                        yAxes: [{
+                            display: false,
+                            gridLines: {
+                                display: false,
+                            },
+                            scaleLabel: {
+                                show: true,
+                                labelString: 'Value'
+                            },
+                        }]
+                    }
+                }
+            };
+
+
+            var ctx2 = document.getElementById("canvas-environment").getContext("2d");
+            window.bubbleChart = new Chart(ctx2, config2);
+            var ctx3 = document.getElementById("canvas-activity").getContext("2d");
+            window.scatterChart = new Chart(ctx3, config3);
+
+        }
+    </script>
 </body>
+
+</html>
+y>
 
 </html>

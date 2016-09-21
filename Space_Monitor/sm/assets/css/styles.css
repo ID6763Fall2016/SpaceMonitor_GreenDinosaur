@@ -1,4 +1,13 @@
 /*-------------
+ 	Variables
+-------------*/
+
+:root {
+  --gradientstart: #b3953e;
+  --gradientend: #f5d23b;
+}
+
+/*-------------
  	General
 -------------*/
 
@@ -12,6 +21,9 @@ html{
 	font: normal 16px sans-serif;
 	color: #555;
 }
+
+
+
 
 ul, nav{
 	list-style: none;
@@ -109,6 +121,7 @@ header{
 	align-items: center;
 	color: #fff;
 	padding: 35px 100px 10px;
+	/*padding: 35px 100px 0;*/
 	background-color: rgba(0, 0, 0, 0.5);
 }
 
@@ -357,6 +370,48 @@ header nav li:last-child{
 
 
 
+/*--------------------
+ 	Monitor-Live Section
+--------------------*/
+
+.monitor-live{
+	background-color: #fff;
+}
+
+
+.monitor-live .grid li{
+	padding: 0 30px;
+	flex-basis: 50%;
+	/*flex-basis: 100%;*/
+	text-align: center;
+}
+
+
+
+.monitor-live .grid li h4{
+	color: #555;
+    font-size: 20px;
+    margin-bottom: 25px;
+}
+
+.monitor-live .grid li p{
+    margin: 0;
+}
+
+.monitor-live .grid li canvas {
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+}
+
+#canvas-activity {
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#b3953e+0,f5d23b+100 */
+	background: var(--gradientstart); /* Old browsers */
+	background: -moz-linear-gradient(top,  var(--gradientstart) 0%,var(--gradientend) 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top,  var(--gradientstart) 0%,var(--gradientend) 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom,  var(--gradientstart) 0%,var(--gradientend) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	/*filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=var(--gradientstart), endColorstr=var(--gradientend),GradientType=0 );*/ /* IE6-9 */
+}
 /*---------------------
  	Contact Section
 ---------------------*/
