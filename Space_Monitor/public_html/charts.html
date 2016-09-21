@@ -19,11 +19,18 @@
 	</style>
 </head>
 
-<body>
+<body id="bodyid">
+
+
+	<header>
+		<h2>Cafe Monitor</h2>
+	</header>
+
+
 	<div id="block_container">
-		<div id="block1">
+		<!--<div id="block1">
 			<canvas id="canvas1"></canvas>
-		</div>
+		</div>-->
 		<div id="block2">
 			<canvas id="canvas2"></canvas>
 		</div>
@@ -44,16 +51,17 @@
 
 
 		var img_person = new Image(50, 50);
-		img_person.src = 'https://i.imgur.com/yDYW1I7.png';
+		//  img_person.src = 'https://i.imgur.com/yDYW1I7.png';
+		// img_person.src = 'http://www.freeiconspng.com/uploads/person-icon-person-icon-clipart-image-from-our-icon-clipart-category--9.png';
+		img_person.src = 'person_green.png';
+		// img_person.src = 'http://www.tokbox.com/blog/wp-content/uploads/2015/08/WIFI-Icon.gif' + '?' + new Date().getTime();
 
 
 
-
-
-		var sensor_data_1 = [25]; // temperature (C)
-		var sensor_data_2 = [50]; // humidity 0-100 (%)
-		var sensor_data_3 = [30]; // occupancy/door openings
-		var sensor_data_4 = [70]; // light 0-100 (%)
+		var sensor_data_1 = [20]; // temperature (C)
+		var sensor_data_2 = [90]; // humidity 0-100 (%)
+		var sensor_data_3 = [100]; // occupancy/door openings
+		var sensor_data_4 = [80]; // light 0-100 (%)
 
 		// var socket = io();
 		//
@@ -139,7 +147,7 @@
 			if (blue !== 0) {
 				blue = Math.round(IntensityMax * Math.pow(blue * factor, Gamma));
 			}
-			return "rgba(" + red + "," + green + "," + blue + "," + "1.0)";
+			return "rgba( " + red + ", " + green + ", " + blue + ", " + "1.0) ";
 		}
 
 
@@ -178,7 +186,8 @@
 			var r = Math.round(map_values(light_level, 0, 100, 0, 255)),
 				g = Math.round(map_values(light_level, 0, 100, 0, 255)),
 				b = Math.round(map_values(light_level, 0, 100, 0, 255));
-			document.body.style.background = "rgba(" + r + "," + g + "," + b + ", 1)";
+			document.getElementById("canvas3").style.background = "rgba( " + r + ", " + g + ", " + b + ", 1) ";
+			// document.body.style.background = "rgba( " + r + ", " + g + ", " + b + ", 1) ";
 		}
 
 
@@ -189,6 +198,7 @@
 
 			var temperature = graph_data_1;
 			var rgba_string = nmToRGBA(temperature_to_nm(temperature));
+			document.getElementById("canvas2").style.background = rgba_string;
 
 			var humidity = graph_data_2;
 			var drops_dataset = make_drops(humidity);
@@ -202,24 +212,24 @@
 			var config1 = {
 				type: 'bar',
 				data: {
-					labels: [""],
+					labels: [" "],
 					datasets: [{
-						label: "Temperature Dataset",
-						data: temperature,
+						label: "Temperature Dataset ",
+						data: [temperature],
 						backgroundColor: rgba_string,
 					}]
 				},
 				options: {
 					animation: false,
 					title: {
-						display: true,
-						text: "Temperature"
+						display: false,
+						text: "Temperature "
 					},
 					legend: {
 						display: false,
 					},
 					tooltips: {
-						//enabled: false,
+						enabled: false,
 					},
 					scales: {
 						xAxes: [{
@@ -248,9 +258,9 @@
 			var config2 = {
 				type: 'bubble',
 				data: {
-					labels: [""],
+					labels: [" "],
 					datasets: [{
-						label: "Humidity Dataset",
+						label: "Humidity Dataset ",
 						data: drops_dataset,
 						backgroundColor: 'rgba(0, 50, 200, 0.5)',
 					}],
@@ -258,14 +268,14 @@
 				options: {
 					animation: false,
 					title: {
-						display: true,
-						text: "Humidity"
+						display: false,
+						text: "Humidity "
 					},
 					legend: {
 						display: false,
 					},
 					tooltips: {
-						//enabled: false,
+						enabled: false,
 					},
 					scales: {
 						xAxes: [{
@@ -296,9 +306,9 @@
 			var config3 = {
 				type: 'scatter',
 				data: {
-					labels: [""],
+					labels: [" "],
 					datasets: [{
-						label: "Occupancy Dataset",
+						label: "Occupancy Dataset ",
 						data: occupancy_dataset,
 						backgroundColor: 'rgba(0, 0, 0, 0.0)',
 						borderColor: 'rgba(0, 0, 0, 0.0)',
@@ -310,14 +320,14 @@
 				options: {
 					animation: false,
 					title: {
-						display: true,
-						text: "Occupancy"
+						display: false,
+						text: "Occupancy "
 					},
 					legend: {
 						display: false,
 					},
 					tooltips: {
-						//enabled: false,
+						enabled: false,
 					},
 					scales: {
 						xAxes: [{
@@ -343,8 +353,8 @@
 				}
 			};
 
-			var ctx1 = document.getElementById("canvas1").getContext("2d");
-			window.barChart = new Chart(ctx1, config1);
+			// var ctx1 = document.getElementById("canvas1").getContext("2d");
+			// window.barChart = new Chart(ctx1, config1);
 			var ctx2 = document.getElementById("canvas2").getContext("2d");
 			window.bubbleChart = new Chart(ctx2, config2);
 			var ctx3 = document.getElementById("canvas3").getContext("2d");

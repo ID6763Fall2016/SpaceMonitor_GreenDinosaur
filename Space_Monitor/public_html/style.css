@@ -1,3 +1,31 @@
+#bodyid
+{
+  background: rgba(231, 231, 227, 1.0);
+}
+
+
+header, footer {
+    height: 30px;
+    padding-left: 1em;
+    /*padding: 1px;*/
+    color: white;
+    font-family: sans-serif;
+    background-color: rgba(120, 121, 117, 1.0);
+    clear: left;
+    text-align: left;
+}
+
+/*#header
+{
+  width: 100%;
+  height: 20%;
+  text-align: left;
+  font-family: sans-serif;
+  font-size: 20;
+  color: #eee;
+  background-color: #777;
+}*/
+
 #block_container
 {
     text-align:center;
@@ -14,7 +42,7 @@
 #block2
 {
     display:inline-block;
-    width: 400px;
+    width: 600px;
 }
 
 #block3
@@ -27,4 +55,5 @@
 {
     height: 100%;
     width: 100%;
+    background-color: rgba(0, 0, 255, 0.7);
 }
