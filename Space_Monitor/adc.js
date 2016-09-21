@@ -29,4 +29,4 @@ setInterval(function() {
             // any other data processing code goes here...
         });
     }
-}, 1000);
+}, 1);
