@@ -29,4 +29,4 @@ setInterval(function() {
             // any other data processing code goes here...
         });
     }
-}, 1);
+}, 1000 / 860);
