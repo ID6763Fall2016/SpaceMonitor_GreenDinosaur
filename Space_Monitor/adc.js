@@ -29,13 +29,13 @@ setInterval(function() {
             // if you made it here, then the data object contains your reading!
             reading = data;
             // any other data processing code goes here...
-            adc_data[counter] = reading;
-            ++counter;
-
-            if (counter == 10) {
-                counter = 0;
-                console.log(adc_data);
-            }
+            // adc_data[counter] = reading;
+            // ++counter;
+            //
+            // if (counter == 10) {
+            //     counter = 0;
+            //     console.log(adc_data);
+            // }
         });
     }
 }, 1000 / 860);
