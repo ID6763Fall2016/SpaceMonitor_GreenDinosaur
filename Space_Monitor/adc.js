@@ -15,18 +15,19 @@ var progGainAmp = '4096'; // see index.js for allowed values for your chip
 
 //somewhere to store our reading
 
+setInterval(function() {
+    var reading = 0;
+    if (!adc.busy) {
+        adc.readADCSingleEnded(channel, progGainAmp, samplesPerSecond, function(err, data) {
+            if (err) {
+                //logging / troubleshooting code goes here...
+                throw err;
+            }
+            // if you made it here, then the data object contains your reading!
+            reading = data;
+            console.log(reading);
+            // any other data processing code goes here...
 
-var reading = 0;
-if (!adc.busy) {
-    adc.readADCSingleEnded(channel, progGainAmp, samplesPerSecond, function(err, data) {
-        if (err) {
-            //logging / troubleshooting code goes here...
-            throw err;
-        }
-        // if you made it here, then the data object contains your reading!
-        reading = data;
-        console.log(reading);
-        // any other data processing code goes here...
-
-    });
-}
+        });
+    }
+}, 1000);
