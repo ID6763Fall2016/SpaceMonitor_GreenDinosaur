@@ -49,7 +49,7 @@ io.on('connection', function(socket) {
     var sendLiveData = setInterval(function() {
         socket.emit('server_sendlivedata', [sensor_data]);
         console.log("sent " + [sensor_data]);
-    }, 5000);
+    }, 1000);
 
     socket.on('disconnect', function() {
         console.log("user disconnected from socket");
