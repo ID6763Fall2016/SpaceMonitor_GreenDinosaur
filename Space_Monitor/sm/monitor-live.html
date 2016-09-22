@@ -226,34 +226,21 @@
         }
 
 
-        // var set_occupancy = function(n_people) {
-        //     // scale number of people to "occupancy percentage"
-        //     // for demo purposes, 5 people is full occupancy
-        //     var occupancy = map_values(n_people, 0, 5, 0, 100);
-        //
-        //     var occupancy_string = "";
-        //     if (occupancy < 10) {
-        //         occupancy_string = "low";
-        //     } else if (occupancy < 30) {
-        //         occupancy_string = "medium";
-        //     } else {
-        //         occupancy_string = "high";
-        //     }
-        //
-        //     document.getElementById("vartext-occupancy").innerHTML = occupancy_string + " (" + n_people + ")";
-        //
-        //     var occupancy_dataset = [];
-        //     for (var i = 0; i < occupancy; i++) {
-        //         occupancy_dataset.push({
-        //             x: randomScalingFactor(),
-        //             y: randomScalingFactor(),
-        //         });
-        //     }
-        //     return occupancy_dataset;
-        // }
-
         var set_occupancy = function(n_people) {
-            var occupancy = map_values(n_people, 0, 6, 20, 100);
+            // scale number of people to "occupancy percentage"
+            // for demo purposes, 5 people is full occupancy
+            var occupancy = map_values(n_people, 0, 6, 10, 100);
+
+            var occupancy_string = "";
+            if (occupancy < 20) {
+                occupancy_string = "low";
+            } else if (occupancy < 40) {
+                occupancy_string = "medium";
+            } else {
+                occupancy_string = "high";
+            }
+
+            document.getElementById("vartext-occupancy").innerHTML = occupancy_string + " (" + n_people + ")";
 
             var occupancy_dataset = [];
             for (var i = 0; i < occupancy; i++) {
@@ -264,6 +251,19 @@
             }
             return occupancy_dataset;
         }
+
+        // var set_occupancy = function(n_people) {
+        //     var occupancy = map_values(n_people, 0, 6, 20, 100);
+        //
+        //     var occupancy_dataset = [];
+        //     for (var i = 0; i < occupancy; i++) {
+        //         occupancy_dataset.push({
+        //             x: randomScalingFactor(),
+        //             y: randomScalingFactor(),
+        //         });
+        //     }
+        //     return occupancy_dataset;
+        // }
 
 
         var set_light = function(light_level) {
