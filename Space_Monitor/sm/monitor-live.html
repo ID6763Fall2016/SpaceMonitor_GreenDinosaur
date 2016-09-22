@@ -224,7 +224,7 @@
                 occupancy_string = "high";
             }
 
-            document.getElementById("vartext-occupancy").innerHTML = occupancy_string;
+            document.getElementById("vartext-occupancy").innerHTML = occupancy_string + " (" + n_people + ")";
 
             var occupancy_dataset = [];
             for (var i = 0; i < occupancy; i++) {
@@ -256,7 +256,7 @@
             }
             document.documentElement.style.setProperty('--gradientstart', gradientstart);
             document.documentElement.style.setProperty('--gradientend', gradientend);
-            document.getElementById("vartext-luminosity").innerHTML = luminosity_string;
+            document.getElementById("vartext-luminosity").innerHTML = luminosity_string + " (" + light_level + ")";
         }
 
         set_noise = function(noise_level) {
@@ -273,7 +273,7 @@
                 person_img_src = '/assets/img/person-level-3.png';
                 noise_string = "loud";
             }
-            document.getElementById("vartext-noise").innerHTML = noise_string;
+            document.getElementById("vartext-noise").innerHTML = noise_string + " (" + noise_level + ")";
 
             return person_img_src;
         }
