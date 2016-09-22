@@ -67,24 +67,24 @@ var update_ADC_sensors = function() {
     while (adc.busy) {
         console.log("wait 1");
     }
-    adc.readADCSingleEnded(ADC_CHANNEL_PHOTORESISTOR, progGainAmp, samplesPerSecond, function(err, data) {
-        if (err) {
-            throw err;
+    adc.readADCSingleEnded(ADC_CHANNEL_PHOTORESISTOR, progGainAmp, samplesPerSecond, function(err1, data1) {
+        if (err1) {
+            throw err1;
         }
         console.log("in 1");
-        ADC_sensor_luminosity = data;
+        ADC_sensor_luminosity = data1;
     });
     console.log("luminosity: " + ADC_sensor_luminosity);
 
     while (adc.busy) {
         console.log("wait 2");
     }
-    adc.readADCSingleEnded(ADC_CHANNEL_MIC, progGainAmp, samplesPerSecond, function(err, data) {
-        if (err) {
-            throw err;
+    adc.readADCSingleEnded(ADC_CHANNEL_MIC, progGainAmp, samplesPerSecond, function(err2, data2) {
+        if (err2) {
+            throw err2;
         }
         console.log("in 2");
-        ADC_sensor_noise = data;
+        ADC_sensor_noise = data2;
     });
     console.log("noise: " + ADC_sensor_noise);
 
