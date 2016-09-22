@@ -195,7 +195,7 @@ setInterval(function() {
     };
     reset_door_sensor();
     insertSample(sensor_data);
-    console.log(sensor_data);
+    //console.log("saved: " + sensor_data);
 }, 1000);
 
 // retrieve last N data
