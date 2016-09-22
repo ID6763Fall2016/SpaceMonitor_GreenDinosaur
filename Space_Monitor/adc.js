@@ -32,7 +32,7 @@ var intervalID = setInterval(function() {
             ++counter;
             if (counter == counter_max) {
                 console.log(ADC_data);
-                console.log(ADC_timestamps);
+                console.log(ADC_timestamps - 1474509790495);
                 counter = 0;
                 clearInterval(intervalID);
             }
