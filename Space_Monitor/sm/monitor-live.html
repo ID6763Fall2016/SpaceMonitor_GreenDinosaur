@@ -102,7 +102,7 @@
         var socket = io();
 
         socket.on('server_sendlivedata', function(incomingData) {
-            console.log("received " + incomingData);
+            //console.log("received " + incomingData);
 
             sensor_data = incomingData;
             //@TODO de-interleave data
@@ -282,19 +282,18 @@
 
 
             var temperature = graph_data[0]["temperature"];
-            window.alert("test" + temperature);
             set_temperature(temperature);
 
-            var humidity = graph_data[1];
+            var humidity = graph_data[0]["humidity"];
             var drops_dataset = set_humidity(humidity);
 
-            var occupancy = graph_data[2];
+            var occupancy = graph_data[0]["door"];
             var occupancy_dataset = set_occupancy(occupancy);
 
-            var luminosity = graph_data[3];
+            var luminosity = graph_data[0]["luminosity"];
             set_light(luminosity);
 
-            var noise_level = graph_data[4];
+            var noise_level = graph_data[0]["noise"];
             img_person.src = set_noise(noise_level);
 
 
