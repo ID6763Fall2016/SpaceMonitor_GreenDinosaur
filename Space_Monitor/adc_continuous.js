@@ -30,15 +30,15 @@ if (!adc.busy) {
     });
 }
 
-setInterval(function() {
-    adc.getLastConversionResults(function(err, data) {
-        if (err) {
-            throw err;
 
-        }
-        console.log(data);
-    });
-}, 1000);
+adc.getLastConversionResults(function(err, data) {
+    if (err) {
+        throw err;
+
+    }
+    console.log(data);
+});
+
 
 //
 //
