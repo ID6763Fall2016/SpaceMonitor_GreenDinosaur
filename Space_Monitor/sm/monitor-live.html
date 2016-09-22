@@ -252,11 +252,11 @@
         //     return occupancy_dataset;
         // }
 
-        var set_occupancy = function(occupancy) {
-            var n_people = map_values(occupancy, 0, 100, 0, 100);
-            n_people = 30;
+        var set_occupancy = function(n_people) {
+            var occupancy = map_values(n_people, 0, 6, 20, 100);
+
             var occupancy_dataset = [];
-            for (var i = 0; i < n_people; i++) {
+            for (var i = 0; i < occupancy; i++) {
                 occupancy_dataset.push({
                     x: randomScalingFactor(),
                     y: randomScalingFactor(),
@@ -270,14 +270,14 @@
             var gradientstart = "";
             var gradientend = "";
             var luminosity_string = "";
-            if (light_level < 33) {
+            if (light_level > 1050) {
                 gradientstart = "rgb(13,14,12)";
                 gradientend = "rgb(50,47,31)";
                 luminosity_string = "dark";
-            } else if (light_level < 66) {
+            } else if (light_level > 350) {
                 gradientstart = "rgb(102,88,45)";
                 gradientend = "rgb(127,108,52)";
-                luminosity_string = "medium";
+                luminosity_string = "regular";
             } else {
                 gradientstart = "rgb(179,149,62)";
                 gradientend = "rgb(245,210,19)";
@@ -285,17 +285,17 @@
             }
             document.documentElement.style.setProperty('--gradientstart', gradientstart);
             document.documentElement.style.setProperty('--gradientend', gradientend);
-            document.getElementById("vartext-luminosity").innerHTML = luminosity_string + " (" + light_level + ")";
+            document.getElementById("vartext-luminosity").innerHTML = luminosity_string; // + " (" + light_level + ")";
         }
 
         set_noise = function(noise_level) {
 
             var im;
             var noise_string = "";
-            if (noise_level < 33) {
+            if (noise_level < 535) {
                 im = img_person_red_level_0;
                 noise_string = "quiet";
-            } else if (noise_level < 66) {
+            } else if (noise_level < 750) {
                 im = img_person_red_level_1;
                 noise_string = "medium";
             } else {
