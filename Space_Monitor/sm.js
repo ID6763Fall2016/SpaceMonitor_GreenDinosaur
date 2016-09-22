@@ -65,24 +65,26 @@ var update_DHT_sensor = function() {
 var update_ADC_sensors = function() {
     var sensor_flag = 0; // 0 for luminosity, 1 for noise
     // read microphone
-    if (!adc.busy) {
+    if ((!adc.busy) && (!sensor_flag)) {
         adc.readADCSingleEnded(ADC_CHANNEL_PHOTORESISTOR, progGainAmp, samplesPerSecond, function(err, data) {
             if (err) {
                 throw err;
             }
             ADC_sensor_luminosity = data;
             console.log("luminosity: " + ADC_sensor_luminosity);
+            sensor_flag = 1;
         });
     }
     // after 100 ms, read microphone
     setTimeout(function() {
-        if (!adc.busy) {
+        if ((!adc.busy) && sensor_flag) {
             adc.readADCSingleEnded(ADC_CHANNEL_MIC, progGainAmp, samplesPerSecond, function(err, data) {
                 if (err) {
                     throw err;
                 }
                 ADC_sensor_noise = data;
                 console.log("noise: " + ADC_sensor_noise);
+                sensor_flag = 0;
             });
         }
     }, 100);
