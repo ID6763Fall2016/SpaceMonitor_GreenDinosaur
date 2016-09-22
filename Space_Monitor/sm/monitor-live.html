@@ -198,6 +198,7 @@
             document.getElementById("vartext-humidity").innerHTML = humidity + " %";
 
             var n_drops = Math.round(Math.pow(2, map_values(humidity, 0, 100, 0, 8)));
+            window.alert(n_drops);
             var drops_dataset = [];
             for (var i = 0; i < n_drops; i++) {
                 drops_dataset.push({
