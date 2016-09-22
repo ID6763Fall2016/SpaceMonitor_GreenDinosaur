@@ -28,11 +28,11 @@ var intervalID = setInterval(function() {
             }
             // if you made it here, then the data object contains your reading!
             ADC_data[counter] = data;
-            ADC_timestamps[counter] = Date.now();
+            ADC_timestamps[counter] = Date.now() - 1474509790495;
             ++counter;
             if (counter == counter_max) {
                 console.log(ADC_data);
-                console.log(ADC_timestamps - 1474509790495);
+                console.log(ADC_timestamps);
                 counter = 0;
                 clearInterval(intervalID);
             }
