@@ -97,7 +97,7 @@ var GPIO = require('onoff').Gpio;
 var LED_connection_status = new GPIO(18, 'out'); // gpio 18, output
 var button_door = new GPIO(17, 'in', 'rising', {
     persistentWatch: true,
-    debounceTimeout: 1000
+    debounceTimeout: 100
 }); // gpio 17, input, rising edge interrupts only, enable button to work on consecutive pushes, debounce for 1 second
 LED_connection_status.writeSync(1);
 
