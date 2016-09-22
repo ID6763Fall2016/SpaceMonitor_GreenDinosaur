@@ -70,9 +70,13 @@ var chip = 1; //0 for ads1015, 1 for ads1115
 //Simple usage (default ADS address on pi 2b or 3):
 var adc = new ads1x15(chip);
 
-var channel = 3; //channel 0, 1, 2, or 3...
-var samplesPerSecond = '860'; // see index.js for allowed values for your chip
-var progGainAmp = '4096'; // see index.js for allowed values for your chip
+var ADC_CHANNEL_PHOTORESISTOR = 0;
+var ADC_CHANNEL_MIC = 3;
+var samplesPerSecond = '860'; // highest sampling rate
+var progGainAmp = '4096'; // cover +4V to -4V
+
+var ADC_sensor_luminosity = 0;
+var ADC_sensor_noise = 0;
 
 /******* Check Internet Connection Status *******/
 var previous_online_status = false;
@@ -96,17 +100,12 @@ setInterval(function() {
 
 /******* Measure Door openings/minute *******/
 var door_counter = 0;
-var door_interval = 1; // minutes
 
 function count_door_openings() {
     door_counter++;
     console.log("door: " + door_counter);
 }
 
-// reset door counter every door_interval minutes
-setInterval(function() {
-    door_counter = 0;
-}, door_interval * 60000);
 
 // watch for Door opening actions and call callback function
 button_door.watch(count_door_openings);
@@ -118,25 +117,52 @@ var DHT_sensor = require('node-dht-sensor');
 var DHT_sensor_temp = -1;
 var DHT_sensor_hum = -1;
 
-var DHT_sensor_string;
-
-var DHT_sensor_interval = 500; // ms
+var DHT_sensor_string = "";
 
 if (DHT_sensor.initialize(22, 4)) {
-    setInterval(function() {
-        var readout = DHT_sensor.read();
-        DHT_sensor_temp = readout.temperature.toFixed(1);
-        DHT_sensor_hum = readout.humidity.toFixed(1);
-        DHT_sensor_string = 'Temperature: ' + DHT_sensor_temp + 'C, ' + 'humidity: ' + DHT_sensor_hum + '%';
-        //console.log(DHT_sensor_string);
-    }, DHT_sensor_interval);
+    update_DHT_sensor();
+    console.log(DHT_sensor_string);
 } else {
     console.warn('Failed to initialize DHT sensor');
 }
 
 
 
+/******* Measurements *******/
+var update_DHT_sensor = function() {
+    var readout = DHT_sensor.read();
+    DHT_sensor_temp = readout.temperature.toFixed(1);
+    DHT_sensor_hum = readout.humidity.toFixed(1);
+    DHT_sensor_string = 'Temperature: ' + DHT_sensor_temp + 'C, ' + 'humidity: ' + DHT_sensor_hum + '%';
+}
 
+var update_ADC_sensors = function() {
+    var sensor_flag = 0; // 0 for luminosity, 1 for noise
+    // read microphone
+    if (!adc.busy) {
+        adc.readADCSingleEnded(ADC_CHANNEL_PHOTORESISTOR, progGainAmp, samplesPerSecond, function(err, data) {
+            if (err) {
+                throw err;
+            }
+            ADC_sensor_luminosity = data;
+            console.log("luminosity: " + ADC_sensor_luminosity);
+        });
+    }
+    // read microphone
+    if (!adc.busy) {
+        adc.readADCSingleEnded(ADC_CHANNEL_MIC, progGainAmp, samplesPerSecond, function(err, data) {
+            if (err) {
+                throw err;
+            }
+            ADC_sensor_noise = data;
+            console.log("noise: " + ADC_sensor_noise);
+        });
+    }
+}
+
+var reset_door_sensor = function() {
+    door_counter = 0;
+}
 
 /******* Database *******/
 var DatabaseEngine = require('tingodb')();
@@ -145,7 +171,7 @@ var DatabaseEngine = require('tingodb')();
 var database = new DatabaseEngine.Db(__dirname + '/db', {});
 
 var insertSample = function(new_sample) {
-    var sampleCollection = database.collection('somestuff');
+    var sampleCollection = database.collection('measurements');
     sampleCollection.insert(new_sample,
         function(err, docResult) {
             assert.equal(err, null);
@@ -153,15 +179,21 @@ var insertSample = function(new_sample) {
         });
 }
 
-// add data to the table every 500ms
+// add data to the table every 1000ms
 setInterval(function() {
+    update_DHT_sensor();
+    update_ADC_sensors();
     var new_sample = {
         "temperature": DHT_sensor_temp,
         "humidity": DHT_sensor_hum,
+        "door": door_counter,
+        "luminosity": ADC_sensor_luminosity,
+        "noise": ADC_sensor_noise,
         "datetime": new Date()
     };
+    reset_door_sensor();
     insertSample(new_sample);
-}, 500);
+}, 1000);
 
 // retrieve last N data
 var getLatestSamples = function(theCount, callback) {
