@@ -46,6 +46,17 @@
             <canvas id="something" height="450" width="600"></canvas>
         </div>
 
+    </section>
+
+    <section class="features">
+        <h3 class="title">Detailed Data</h3>
+        <p>Last 100 temperature measurements.</p>
+        <hr>
+
+        <div style="width: 50%">
+            <canvas id="something2" height="450" width="600"></canvas>
+        </div>
+
 
     </section>
 
@@ -63,11 +74,28 @@
     <script>
         window.onload = function() {
             initLineChart();
+            initLineChart2();
         }
 
         var socket = io();
 
         var lineChartData = {
+            //labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+            labels: Array(100).fill(0),
+            datasets: [{
+                label: "My First dataset",
+                fillColor: "rgba(220,220,220,0.2)",
+                strokeColor: "rgba(220,220,220,1)",
+                pointColor: "rgba(220,220,220,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(220,220,220,1)",
+                //data: [65, 59, 80, 81, 56, 55, 40, 50, 40, 30]
+                data: Array(100).fill(0)
+            }]
+        }
+
+        var lineChartData2 = {
             //labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
             labels: Array(100).fill(0),
             datasets: [{
@@ -94,6 +122,14 @@
             initLineChart();
         });
 
+        socket.on('server_sendalldata2', function(incomingData) {
+            console.log(incomingData);
+
+            lineChartData2.datasets[0].data = incomingData;
+
+            initLineChart2();
+        });
+
         var initLineChart = function() {
 
             var options = {
@@ -104,6 +140,18 @@
             var canvas = document.getElementById("something");
             var ctx = canvas.getContext("2d");
             window.myLineChart = new Chart(ctx).Line(lineChartData, options);
+        }
+
+        var initLineChart2 = function() {
+
+            var options2 = {
+                animation: false,
+                responsive: true
+            };
+
+            var canvas = document.getElementById("something2");
+            var ctx = canvas.getContext("2d");
+            window.myLineChart = new Chart(ctx).Line(lineChartData2, options2);
         }
     </script>
 </body>
