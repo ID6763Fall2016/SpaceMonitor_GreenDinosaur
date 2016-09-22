@@ -25,16 +25,18 @@ if (!adc.busy) {
             throw err;
         }
         console.log("start" + data);
+
+        adc.getLastConversionResults(function(err, data) {
+            if (err) {
+                throw err;
+            }
+            console.log("getlast" + data);
+        });
     });
 }
 
 
-adc.getLastConversionResults(function(err, data) {
-    if (err) {
-        throw err;
-    }
-    console.log("getlast" + data);
-});
+
 
 
 //
