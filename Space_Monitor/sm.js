@@ -63,35 +63,26 @@ var update_DHT_sensor = function() {
 }
 
 var update_ADC_sensors = function() {
-    var sensor_flag = 0; // 0 for luminosity, 1 for noise
     // read microphone
-    if ((!adc.busy) && (!sensor_flag)) {
+    if (!adc.busy) {
         adc.readADCSingleEnded(ADC_CHANNEL_PHOTORESISTOR, progGainAmp, samplesPerSecond, function(err, data) {
             if (err) {
                 throw err;
             }
             ADC_sensor_luminosity = data;
-            console.log("luminosity: " + ADC_sensor_luminosity);
-            sensor_flag = 1;
         });
-    } else {
-        console.log("waiting for " + sensor_flag);
     }
-    // after 100 ms, read microphone
-    setTimeout(function() {
-        if ((!adc.busy) && sensor_flag) {
-            adc.readADCSingleEnded(ADC_CHANNEL_MIC, progGainAmp, samplesPerSecond, function(err, data) {
-                if (err) {
-                    throw err;
-                }
-                ADC_sensor_noise = data;
-                console.log("noise: " + ADC_sensor_noise);
-                sensor_flag = 0;
-            });
-        } else {
-            console.log("waiting for " + sensor_flag);
-        }
-    }, 100);
+    console.log("luminosity: " + ADC_sensor_luminosity);
+
+    if (!adc.busy) {
+        adc.readADCSingleEnded(ADC_CHANNEL_MIC, progGainAmp, samplesPerSecond, function(err, data) {
+            if (err) {
+                throw err;
+            }
+            ADC_sensor_noise = data;
+        });
+    }
+    console.log("noise: " + ADC_sensor_noise);
 
 }
 
