@@ -89,7 +89,7 @@
         socket.on('server_sendalldata', function(incomingData) {
             console.log(incomingData);
 
-            lineChartData.datasets[0].data = incomingData;
+            lineChartData.datasets[0].data = incomingData[0];
 
             initLineChart();
         });

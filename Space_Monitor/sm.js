@@ -35,12 +35,20 @@ io.on('connection', function(socket) {
     socket.on('client_askfordata', function(data) {
 
         getLatestSamples(100, function(results) {
-            var values = []
+            var hum_values = [];
+            var temp_values = [];
             for (var i = 0; i < results.length; i++) {
-                values.push(results[i]["humidity"]);
+                temp_values.push(results[i]["temperature"]);
+                hum_values.push(results[i]["humidity"]);
             }
-            socket.emit('server_sendalldata', values);
-            console.log("sent    : " + values);
+            socket.emit('server_sendalldata', {
+                temp_values,
+                hum_values
+            });
+            console.log("sent: " + {
+                temp_values,
+                hum_values
+            });
         });
 
     });
