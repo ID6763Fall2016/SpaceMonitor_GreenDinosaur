@@ -404,7 +404,7 @@ header nav li:last-child{
 	-ms-user-select: none;
 }*/
 
-.monitor-live .grid li canvas {
+canvas {
 	-moz-user-select: none;
 	-webkit-user-select: none;
 	-ms-user-select: none;
