@@ -90,9 +90,6 @@ var update_ADC_sensors = function() {
 
     });
 
-
-
-
 }
 
 var reset_door_sensor = function() {
@@ -188,11 +185,12 @@ var insertSample = function(new_sample) {
         });
 }
 
+var sensor_values = {};
 // add data to the table every 1000ms
 setInterval(function() {
     update_DHT_sensor();
     update_ADC_sensors();
-    var new_sample = {
+    sensor_values = {
         "temperature": DHT_sensor_temp,
         "humidity": DHT_sensor_hum,
         "door": door_counter,
@@ -201,7 +199,8 @@ setInterval(function() {
         "datetime": new Date()
     };
     reset_door_sensor();
-    insertSample(new_sample);
+    insertSample(sensor_values);
+    console.log(sensor_values);
 }, 1000);
 
 // retrieve last N data
