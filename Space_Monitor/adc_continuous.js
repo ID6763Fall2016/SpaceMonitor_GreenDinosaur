@@ -16,7 +16,7 @@ var progGainAmp = '4096'; // see index.js for allowed values for your chip
 //somewhere to store our reading
 
 if (!adc.busy) {
-    startContinuousConversion(channel, progGainAmp, samplesPerSecond, function(err, data) {
+    adc.startContinuousConversion(channel, progGainAmp, samplesPerSecond, function(err, data) {
         if (err) {
             //logging / troubleshooting code goes here...
             throw err;
