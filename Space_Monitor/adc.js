@@ -14,9 +14,11 @@ var samplesPerSecond = '860'; // see index.js for allowed values for your chip
 var progGainAmp = '4096'; // see index.js for allowed values for your chip
 
 //somewhere to store our reading
+var counter = 0;
+var counter_max = 10;
+var ADC_data = [];
 
-setInterval(function() {
-    var reading = 0;
+var intervalID = setInterval(function() {
     if (!adc.busy) {
         adc.readADCSingleEnded(channel, progGainAmp, samplesPerSecond, function(err, data) {
             if (err) {
@@ -24,9 +26,12 @@ setInterval(function() {
                 throw err;
             }
             // if you made it here, then the data object contains your reading!
-            reading = data;
-            console.log(reading);
-            // any other data processing code goes here...
+            ADC_data[counter] = data;
+            ++counter;
+            if (counter == counter_max) {
+                console.log(ADC_data);
+                counter = 0;
+            }
 
         });
     }
