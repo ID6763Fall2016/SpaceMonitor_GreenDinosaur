@@ -36,19 +36,11 @@ io.on('connection', function(socket) {
 
         getLatestSamples(100, function(results) {
             var hum_values = [];
-            var temp_values = [];
             for (var i = 0; i < results.length; i++) {
-                temp_values.push(results[i]["temperature"]);
                 hum_values.push(results[i]["humidity"]);
             }
-            socket.emit('server_sendalldata', {
-                temp_values,
-                hum_values
-            });
-            console.log("sent: " + {
-                temp_values,
-                hum_values
-            });
+            socket.emit('server_sendalldata', hum_values);
+            console.log("sent: " + hum_values);
         });
 
     });
