@@ -240,7 +240,7 @@
                 occupancy_string = "high";
             }
 
-            document.getElementById("vartext-occupancy").innerHTML = occupancy_string + " (" + n_people + ")";
+            document.getElementById("vartext-occupancy").innerHTML = occupancy_string; // + " (" + n_people + ")";
 
             var occupancy_dataset = [];
             for (var i = 0; i < occupancy; i++) {
@@ -252,18 +252,7 @@
             return occupancy_dataset;
         }
 
-        // var set_occupancy = function(n_people) {
-        //     var occupancy = map_values(n_people, 0, 6, 20, 100);
-        //
-        //     var occupancy_dataset = [];
-        //     for (var i = 0; i < occupancy; i++) {
-        //         occupancy_dataset.push({
-        //             x: randomScalingFactor(),
-        //             y: randomScalingFactor(),
-        //         });
-        //     }
-        //     return occupancy_dataset;
-        // }
+
 
 
         var set_light = function(light_level) {
@@ -302,7 +291,7 @@
                 im = img_person_red_level_2;
                 noise_string = "loud";
             }
-            document.getElementById("vartext-noise").innerHTML = noise_string + " (" + noise_level + ")";
+            document.getElementById("vartext-noise").innerHTML = noise_string; // + " (" + noise_level + ")";
 
             return im;
         }
