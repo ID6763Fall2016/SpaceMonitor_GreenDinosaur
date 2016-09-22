@@ -31,8 +31,9 @@ var intervalID = setInterval(function() {
             if (counter == counter_max) {
                 console.log(ADC_data);
                 counter = 0;
+                clearInterval(intervalID);
             }
 
         });
     }
-}, 1000);
+}, 1);
