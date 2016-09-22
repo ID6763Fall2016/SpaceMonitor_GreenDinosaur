@@ -79,9 +79,9 @@ var update_ADC_sensors = function() {
             ADC_sensor_noise = data2;
         });
 
-        // show results
-        console.log("luminosity: " + ADC_sensor_luminosity);
-        console.log("noise: " + ADC_sensor_noise);
+        // // show results
+        // console.log("luminosity: " + ADC_sensor_luminosity);
+        // console.log("noise: " + ADC_sensor_noise);
 
     });
 
