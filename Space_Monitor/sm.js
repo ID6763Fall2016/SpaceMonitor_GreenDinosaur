@@ -6,7 +6,7 @@ var ExpressServer = express();
 var HTTPserver = require('http').Server(ExpressServer);
 
 // serve static pages in public_html folder
-ExpressServer.use(express.static(__dirname + '/public_html'));
+//ExpressServer.use(express.static(__dirname + '/public_html'));
 ExpressServer.use(express.static(__dirname + '/sm'));
 
 // bind server to port 3000
