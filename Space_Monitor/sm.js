@@ -33,8 +33,18 @@ io.on('connection', function(socket) {
     console.log("user connected to socket");
 
     socket.on('client_askfordata', function(data) {
-        // @TODO send detailed data here (e.g. 10 entries)
+
+        getLatestSamples(10, function(results) {
+            var values = []
+            for (var i = 0; i < results.length; i++) {
+                values.push(results[i]["humidity"]);
+            }
+            socket.emit('server_sendalldata', values);
+            console.log("sent    : " + values);
+        });
+
     });
+
     // send live data every 5 seconds
     var sendLiveData = setInterval(function() {
         socket.emit('server_sendlivedata', [sensor_data]);
@@ -205,7 +215,7 @@ setInterval(function() {
 
 // retrieve last N data
 var getLatestSamples = function(theCount, callback) {
-    var sampleCollection = database.collection('somestuff');
+    var sampleCollection = database.collection('measurements');
     sampleCollection
         .find()
         .sort({
