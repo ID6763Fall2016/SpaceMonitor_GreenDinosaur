@@ -89,9 +89,16 @@
             initCharts(sensor_data);
         }
 
-        var img_person = new Image(50, 50);
-        // img_person.src = '/assets/img/person_green.png';
-        img_person.src = '/assets/img/person-level-0.png';
+
+        var img_person;
+
+        var img_person_green = new Image(50, 50);
+        img_person_green.src = '/assets/img/person_green.png';
+
+        var img_person_red = new Image(50, 50);
+        img_person_red.src = '/assets/img/person-level-0.png';
+
+        img_person = img_person_green;
 
         var sensor_data = [{
             "temperature": 35,
