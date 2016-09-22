@@ -283,6 +283,10 @@ header nav li:last-child{
 	background-color: #f7f7f7;
 }
 
+.features a.btn{
+	padding: 20px 46px;
+}
+
 .features .grid li{
 	padding: 0 30px;
 	flex-basis: 33%;
