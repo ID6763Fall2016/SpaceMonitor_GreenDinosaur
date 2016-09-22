@@ -95,11 +95,14 @@ var reset_door_sensor = function() {
 // button is attaced to pin 17, LED to 18
 var GPIO = require('onoff').Gpio;
 var LED_connection_status = new GPIO(18, 'out'); // gpio 18, output
+LED_connection_status.writeSync(1);
+var button_supply = new GPIO(27, 'out'); // gpio 27, output
+button_supply.writeSync(1); // pseudo-supply 3.3V
 var button_door = new GPIO(17, 'in', 'rising', {
     persistentWatch: true,
     debounceTimeout: 100
 }); // gpio 17, input, rising edge interrupts only, enable button to work on consecutive pushes, debounce for 1 second
-LED_connection_status.writeSync(1);
+
 
 /******* ADC *******/
 var ads1x15 = require('node-ads1x15');
@@ -119,17 +122,20 @@ var ADC_sensor_noise = 0;
 var previous_online_status = false;
 var online_check_interval = 10; // minutes
 
-setInterval(function() {
-    var isOnline = require('is-online');
-    isOnline(function(err, online) {
-        // only make changes to LED when something changes in connectivity
-        if (online != previous_online_status) {
-            console.log(online ? "Connection OK" : "No Connection!");
-            LED_connection_status.writeSync(online ? 1 : 0);
-        }
-        previous_online_status = online;
-    });
-}, online_check_interval * 60000);
+if (false) {
+    setInterval(function() {
+        var isOnline = require('is-online');
+        isOnline(function(err, online) {
+            // only make changes to LED when something changes in connectivity
+            if (online != previous_online_status) {
+                console.log(online ? "Connection OK" : "No Connection!");
+                LED_connection_status.writeSync(online ? 1 : 0);
+            }
+            previous_online_status = online;
+        });
+    }, online_check_interval * 60000);
+
+}
 
 
 
