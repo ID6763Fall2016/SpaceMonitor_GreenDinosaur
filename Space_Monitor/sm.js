@@ -35,11 +35,11 @@ io.on('connection', function(socket) {
     socket.on('client_askfordata', function(data) {
         // @TODO send detailed data here (e.g. 10 entries)
     });
-    // send live data every 10 seconds
+    // send live data every 5 seconds
     var sendLiveData = setInterval(function() {
         socket.emit('server_sendlivedata', [sensor_data]);
         console.log("sent " + [sensor_data]);
-    }, 10000);
+    }, 5000);
 
     socket.on('disconnect', function() {
         console.log("user disconnected from socket");
