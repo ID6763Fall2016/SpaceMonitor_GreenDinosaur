@@ -110,8 +110,8 @@ var chip = 1; //0 for ads1015, 1 for ads1115
 //Simple usage (default ADS address on pi 2b or 3):
 var adc = new ads1x15(chip);
 
-var ADC_CHANNEL_PHOTORESISTOR = 0;
-var ADC_CHANNEL_MIC = 3;
+var ADC_CHANNEL_PHOTORESISTOR = 3;
+var ADC_CHANNEL_MIC = 0;
 var samplesPerSecond = '860'; // highest sampling rate
 var progGainAmp = '4096'; // cover +4V to -4V
 
