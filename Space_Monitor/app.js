@@ -64,6 +64,16 @@ var button_door = new GPIO(17, 'in', 'rising', {
 }); // gpio 17, input, rising edge interrupts only, enable button to work on consecutive pushes, debounce for 1 second
 
 
+/******* ADC *******/
+var ads1x15 = require('node-ads1x15');
+var chip = 1; //0 for ads1015, 1 for ads1115
+//Simple usage (default ADS address on pi 2b or 3):
+var adc = new ads1x15(chip);
+
+var channel = 3; //channel 0, 1, 2, or 3...
+var samplesPerSecond = '860'; // see index.js for allowed values for your chip
+var progGainAmp = '4096'; // see index.js for allowed values for your chip
+
 /******* Check Internet Connection Status *******/
 var previous_online_status = false;
 var online_check_interval = 0.5; // minutes
@@ -74,7 +84,7 @@ setInterval(function() {
         // only make changes to LED when something changes in connectivity
         if (online != previous_online_status) {
             console.log(online ? "Connection OK" : "No Connection!");
-            LED_connection_status.writeSync(online ? 0 : 1);
+            LED_connection_status.writeSync(online ? 1 : 0);
         }
         previous_online_status = online;
     });
