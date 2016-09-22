@@ -54,6 +54,42 @@ io.on('connection', function(socket) {
 
 
 
+/******* Measurements *******/
+var update_DHT_sensor = function() {
+    var readout = DHT_sensor.read();
+    DHT_sensor_temp = readout.temperature.toFixed(1);
+    DHT_sensor_hum = readout.humidity.toFixed(1);
+    DHT_sensor_string = 'Temperature: ' + DHT_sensor_temp + 'C, ' + 'humidity: ' + DHT_sensor_hum + '%';
+}
+
+var update_ADC_sensors = function() {
+    var sensor_flag = 0; // 0 for luminosity, 1 for noise
+    // read microphone
+    if (!adc.busy) {
+        adc.readADCSingleEnded(ADC_CHANNEL_PHOTORESISTOR, progGainAmp, samplesPerSecond, function(err, data) {
+            if (err) {
+                throw err;
+            }
+            ADC_sensor_luminosity = data;
+            console.log("luminosity: " + ADC_sensor_luminosity);
+        });
+    }
+    // read microphone
+    if (!adc.busy) {
+        adc.readADCSingleEnded(ADC_CHANNEL_MIC, progGainAmp, samplesPerSecond, function(err, data) {
+            if (err) {
+                throw err;
+            }
+            ADC_sensor_noise = data;
+            console.log("noise: " + ADC_sensor_noise);
+        });
+    }
+}
+
+var reset_door_sensor = function() {
+    door_counter = 0;
+}
+
 /******* GPIO ******/
 // button is attaced to pin 17, LED to 18
 var GPIO = require('onoff').Gpio;
@@ -127,42 +163,6 @@ if (DHT_sensor.initialize(22, 4)) {
 }
 
 
-
-/******* Measurements *******/
-var update_DHT_sensor = function() {
-    var readout = DHT_sensor.read();
-    DHT_sensor_temp = readout.temperature.toFixed(1);
-    DHT_sensor_hum = readout.humidity.toFixed(1);
-    DHT_sensor_string = 'Temperature: ' + DHT_sensor_temp + 'C, ' + 'humidity: ' + DHT_sensor_hum + '%';
-}
-
-var update_ADC_sensors = function() {
-    var sensor_flag = 0; // 0 for luminosity, 1 for noise
-    // read microphone
-    if (!adc.busy) {
-        adc.readADCSingleEnded(ADC_CHANNEL_PHOTORESISTOR, progGainAmp, samplesPerSecond, function(err, data) {
-            if (err) {
-                throw err;
-            }
-            ADC_sensor_luminosity = data;
-            console.log("luminosity: " + ADC_sensor_luminosity);
-        });
-    }
-    // read microphone
-    if (!adc.busy) {
-        adc.readADCSingleEnded(ADC_CHANNEL_MIC, progGainAmp, samplesPerSecond, function(err, data) {
-            if (err) {
-                throw err;
-            }
-            ADC_sensor_noise = data;
-            console.log("noise: " + ADC_sensor_noise);
-        });
-    }
-}
-
-var reset_door_sensor = function() {
-    door_counter = 0;
-}
 
 /******* Database *******/
 var DatabaseEngine = require('tingodb')();
