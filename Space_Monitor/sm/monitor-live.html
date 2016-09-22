@@ -95,8 +95,14 @@
         var img_person_green = new Image(50, 50);
         img_person_green.src = '/assets/img/person_green.png';
 
-        var img_person_red = new Image(50, 50);
-        img_person_red.src = '/assets/img/person-level-0.png';
+        var img_person_red_level_0 = new Image(50, 50);
+        img_person_red_level_0.src = '/assets/img/person-level-0.png';
+        var img_person_red_level_1 = new Image(50, 50);
+        img_person_red_level_1.src = '/assets/img/person-level-1.png';
+        var img_person_red_level_2 = new Image(50, 50);
+        img_person_red_level_2.src = '/assets/img/person-level-2.png';
+        var img_person_red_level_3 = new Image(50, 50);
+        img_person_red_level_3.src = '/assets/img/person-level-3.png';
 
         img_person = img_person_green;
 
@@ -284,21 +290,21 @@
 
         set_noise = function(noise_level) {
 
-            var person_img_src = "";
+            var im;
             var noise_string = "";
             if (noise_level < 33) {
-                person_img_src = '/assets/img/person-level-1.png';
+                im = img_person_red_level_0;
                 noise_string = "quiet";
             } else if (noise_level < 66) {
-                person_img_src = '/assets/img/person-level-2.png';
+                im = img_person_red_level_1;
                 noise_string = "medium";
             } else {
-                person_img_src = '/assets/img/person-level-3.png';
+                im = img_person_red_level_2;
                 noise_string = "loud";
             }
             document.getElementById("vartext-noise").innerHTML = noise_string + " (" + noise_level + ")";
 
-            return img_person_red;
+            return im;
         }
 
         var initCharts = function(graph_data) {
