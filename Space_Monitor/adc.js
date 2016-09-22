@@ -17,6 +17,7 @@ var progGainAmp = '4096'; // see index.js for allowed values for your chip
 var counter = 0;
 var counter_max = 10;
 var ADC_data = [];
+var ADC_timestamps = [];
 
 var intervalID = setInterval(function() {
     if (!adc.busy) {
@@ -27,9 +28,11 @@ var intervalID = setInterval(function() {
             }
             // if you made it here, then the data object contains your reading!
             ADC_data[counter] = data;
+            ADC_timestamps[counter] = Date.now();
             ++counter;
             if (counter == counter_max) {
                 console.log(ADC_data);
+                console.log(ADC_timestamps);
                 counter = 0;
                 clearInterval(intervalID);
             }
