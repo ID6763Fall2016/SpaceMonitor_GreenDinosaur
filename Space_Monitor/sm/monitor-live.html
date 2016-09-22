@@ -90,7 +90,7 @@
         }
 
         var img_person = new Image(50, 50);
-        img_person.src = '/assets/img/person_green.png';
+        // img_person.src = '/assets/img/person_green.png';
         var sensor_data = [{
             "temperature": 35,
             "humidity": 30,
@@ -210,24 +210,37 @@
         }
 
 
-        var set_occupancy = function(n_people) {
-            // scale number of people to "occupancy percentage"
-            // for demo purposes, 5 people is full occupancy
-            var occupancy = map_values(n_people, 0, 5, 0, 100);
+        // var set_occupancy = function(n_people) {
+        //     // scale number of people to "occupancy percentage"
+        //     // for demo purposes, 5 people is full occupancy
+        //     var occupancy = map_values(n_people, 0, 5, 0, 100);
+        //
+        //     var occupancy_string = "";
+        //     if (occupancy < 10) {
+        //         occupancy_string = "low";
+        //     } else if (occupancy < 30) {
+        //         occupancy_string = "medium";
+        //     } else {
+        //         occupancy_string = "high";
+        //     }
+        //
+        //     document.getElementById("vartext-occupancy").innerHTML = occupancy_string + " (" + n_people + ")";
+        //
+        //     var occupancy_dataset = [];
+        //     for (var i = 0; i < occupancy; i++) {
+        //         occupancy_dataset.push({
+        //             x: randomScalingFactor(),
+        //             y: randomScalingFactor(),
+        //         });
+        //     }
+        //     return occupancy_dataset;
+        // }
 
-            var occupancy_string = "";
-            if (occupancy < 10) {
-                occupancy_string = "low";
-            } else if (occupancy < 30) {
-                occupancy_string = "medium";
-            } else {
-                occupancy_string = "high";
-            }
-
-            document.getElementById("vartext-occupancy").innerHTML = occupancy_string + " (" + n_people + ")";
+        var set_occupancy = function(occupancy) {
+            var n_people = map_values(occupancy, 0, 100, 0, 100);
 
             var occupancy_dataset = [];
-            for (var i = 0; i < occupancy; i++) {
+            for (var i = 0; i < n_people; i++) {
                 occupancy_dataset.push({
                     x: randomScalingFactor(),
                     y: randomScalingFactor(),
