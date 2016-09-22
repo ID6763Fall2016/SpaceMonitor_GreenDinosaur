@@ -65,7 +65,7 @@ var update_DHT_sensor = function() {
 var update_ADC_sensors = function() {
     // read microphone
     while (adc.busy) {
-
+        console.log("wait 1");
     }
     adc.readADCSingleEnded(ADC_CHANNEL_PHOTORESISTOR, progGainAmp, samplesPerSecond, function(err, data) {
         if (err) {
@@ -77,7 +77,7 @@ var update_ADC_sensors = function() {
     console.log("luminosity: " + ADC_sensor_luminosity);
 
     while (adc.busy) {
-
+        console.log("wait 2");
     }
     adc.readADCSingleEnded(ADC_CHANNEL_MIC, progGainAmp, samplesPerSecond, function(err, data) {
         if (err) {
