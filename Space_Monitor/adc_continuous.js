@@ -21,9 +21,20 @@ if (!adc.busy) {
             //logging / troubleshooting code goes here...
             throw err;
         }
-        console.log(data);
+        //console.log(data);
     });
 }
+
+setInterval(function() {
+    adc.getLastConversionResults(function(err, data) {
+        if (err) {
+            throw err;
+
+        }
+        console.log(data);
+    })
+}, 1000);
+
 //
 //
 // setInterval(function() {
