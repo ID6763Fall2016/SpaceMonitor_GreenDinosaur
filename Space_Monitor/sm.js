@@ -64,26 +64,28 @@ var update_DHT_sensor = function() {
 
 var update_ADC_sensors = function() {
     // read microphone
-    if (!adc.busy) {
-        adc.readADCSingleEnded(ADC_CHANNEL_PHOTORESISTOR, progGainAmp, samplesPerSecond, function(err, data) {
-            if (err) {
-                throw err;
-            }
-            console.log("in 1");
-            ADC_sensor_luminosity = data;
-        });
+    while (adc.busy) {
+
     }
+    adc.readADCSingleEnded(ADC_CHANNEL_PHOTORESISTOR, progGainAmp, samplesPerSecond, function(err, data) {
+        if (err) {
+            throw err;
+        }
+        console.log("in 1");
+        ADC_sensor_luminosity = data;
+    });
     console.log("luminosity: " + ADC_sensor_luminosity);
 
-    if (!adc.busy) {
-        adc.readADCSingleEnded(ADC_CHANNEL_MIC, progGainAmp, samplesPerSecond, function(err, data) {
-            if (err) {
-                throw err;
-            }
-            console.log("in 2");
-            ADC_sensor_noise = data;
-        });
+    while (adc.busy) {
+
     }
+    adc.readADCSingleEnded(ADC_CHANNEL_MIC, progGainAmp, samplesPerSecond, function(err, data) {
+        if (err) {
+            throw err;
+        }
+        console.log("in 2");
+        ADC_sensor_noise = data;
+    });
     console.log("noise: " + ADC_sensor_noise);
 
 }
