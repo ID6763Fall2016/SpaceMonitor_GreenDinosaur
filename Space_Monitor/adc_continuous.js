@@ -26,7 +26,7 @@ if (!adc.busy) {
             //logging / troubleshooting code goes here...
             throw err;
         }
-        //console.log(data);
+        console.log(data);
     });
 }
 
