@@ -74,16 +74,19 @@ var update_ADC_sensors = function() {
             console.log("luminosity: " + ADC_sensor_luminosity);
         });
     }
-    // read microphone
-    if (!adc.busy) {
-        adc.readADCSingleEnded(ADC_CHANNEL_MIC, progGainAmp, samplesPerSecond, function(err, data) {
-            if (err) {
-                throw err;
-            }
-            ADC_sensor_noise = data;
-            console.log("noise: " + ADC_sensor_noise);
-        });
-    }
+    // after 100 ms, read microphone
+    setTimeout(function() {
+        if (!adc.busy) {
+            adc.readADCSingleEnded(ADC_CHANNEL_MIC, progGainAmp, samplesPerSecond, function(err, data) {
+                if (err) {
+                    throw err;
+                }
+                ADC_sensor_noise = data;
+                console.log("noise: " + ADC_sensor_noise);
+            });
+        }
+    }, 100);
+
 }
 
 var reset_door_sensor = function() {
