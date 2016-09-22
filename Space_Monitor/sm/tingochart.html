@@ -2,14 +2,14 @@
 <html>
 
 <head>
-    <title>My Tingo Charts</title>
+    <title>Humidity</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 </head>
 
 <body>
 
-    <h1>My Tingo Chart</h1>
+    <h1>Humidity</h1>
 
     <div style="width: 50%">
         <canvas id="something" height="450" width="600"></canvas>
@@ -44,9 +44,8 @@
         socket.on('server_sendalldata', function(incomingData) {
             console.log(incomingData);
 
-
             lineChartData.datasets[0].data = incomingData;
-            //window.myLineChart.update();
+
             initLineChart();
         });
 
