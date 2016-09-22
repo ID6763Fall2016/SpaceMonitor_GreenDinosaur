@@ -298,7 +298,7 @@
             }
             document.getElementById("vartext-noise").innerHTML = noise_string + " (" + noise_level + ")";
 
-            return person_img_src;
+            return img_person_red;
         }
 
         var initCharts = function(graph_data) {
@@ -317,10 +317,7 @@
             set_light(luminosity);
 
             var noise_level = graph_data[0]["noise"];
-            //img_person.src = set_noise(noise_level);
-            //img_person.src = '/assets/img/person-level-2.png';
-
-            img_person = img_person_red;
+            img_person = set_noise(noise_level);
 
             var config2 = {
                 type: 'bubble',
