@@ -34,7 +34,7 @@ io.on('connection', function(socket) {
 
     socket.on('client_askfordata', function(data) {
 
-        getLatestSamples(10, function(results) {
+        getLatestSamples(100, function(results) {
             var values = []
             for (var i = 0; i < results.length; i++) {
                 values.push(results[i]["humidity"]);
