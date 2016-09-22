@@ -71,11 +71,7 @@ var update_ADC_sensors = function() {
         if (err1) {
             throw err1;
         }
-        console.log("in 1");
         ADC_sensor_luminosity = data1;
-        console.log("luminosity: " + ADC_sensor_luminosity);
-
-
 
         // start microphone conversion
         while (adc.busy) {
@@ -85,9 +81,11 @@ var update_ADC_sensors = function() {
             if (err2) {
                 throw err2;
             }
-            console.log("in 2");
             ADC_sensor_noise = data2;
         });
+
+        // show results
+        console.log("luminosity: " + ADC_sensor_luminosity);
         console.log("noise: " + ADC_sensor_noise);
 
     });
