@@ -23,7 +23,6 @@ adc.stopContinuousConversion(function(err) {
 if (!adc.busy) {
     adc.startContinuousConversion(channel, progGainAmp, samplesPerSecond, function(err, data) {
         if (err) {
-            //logging / troubleshooting code goes here...
             throw err;
         }
         console.log(data);
@@ -34,7 +33,6 @@ if (!adc.busy) {
 adc.getLastConversionResults(function(err, data) {
     if (err) {
         throw err;
-
     }
     console.log(data);
 });
