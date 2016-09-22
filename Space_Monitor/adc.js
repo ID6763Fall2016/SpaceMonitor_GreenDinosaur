@@ -39,4 +39,4 @@ var intervalID = setInterval(function() {
 
         });
     }
-}, 1);
+}, 2);
