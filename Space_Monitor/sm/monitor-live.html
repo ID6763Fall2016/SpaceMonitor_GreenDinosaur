@@ -91,25 +91,24 @@
 
         var img_person = new Image(50, 50);
         // img_person.src = '/assets/img/person_green.png';
-        var sensor_data = [
-            35, // temperature (C)
-            30, // humidity 0-100 (%)
-            1, // door openings
-            10, // luminosity 0-100 (%)
-            60 // noise 0-100 (%)
-        ];
+        var sensor_data = [{
+            "temperature": 35,
+            "humidity": 30,
+            "door": 1,
+            "luminosity": 300,
+            "noise": 10,
+            "datetime": null
+        }];
+        var socket = io();
 
-        // var socket = io();
-        //
-        // socket.on('server_sendlivedata', function(incomingData) {
-        // 	console.log(incomingData);
-        //
-        //
-        // 	sensor_data = incomingData;
-        // //@TODO de-interleave data
-        //
-        // 	initCharts(sensor_data);
-        // });
+        socket.on('server_sendlivedata', function(incomingData) {
+            console.log("received " + incomingData);
+
+            sensor_data = incomingData;
+            //@TODO de-interleave data
+
+            initCharts(sensor_data);
+        });
 
 
 
@@ -282,7 +281,8 @@
         var initCharts = function(graph_data) {
 
 
-            var temperature = graph_data[0];
+            var temperature = graph_data[0]["temperature"];
+            window.alert("test" + temperature);
             set_temperature(temperature);
 
             var humidity = graph_data[1];

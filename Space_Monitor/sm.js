@@ -36,8 +36,8 @@ io.on('connection', function(socket) {
     });
     // send live data every 10 seconds
     var sendLiveData = setInterval(function() {
-        socket.emit('server_sendlivedata', sensor_data);
-        console.log("sent " + sensor_data);
+        socket.emit('server_sendlivedata', [sensor_data]);
+        console.log("sent " + [sensor_data]);
     }, 10000);
 
     socket.on('disconnect', function() {
@@ -179,12 +179,12 @@ var insertSample = function(new_sample) {
         });
 }
 
-var sensor_values = {};
+var sensor_data = {};
 // add data to the table every 1000ms
 setInterval(function() {
     update_DHT_sensor();
     update_ADC_sensors();
-    sensor_values = {
+    sensor_data = {
         "temperature": DHT_sensor_temp,
         "humidity": DHT_sensor_hum,
         "door": door_counter,
@@ -193,8 +193,8 @@ setInterval(function() {
         "datetime": new Date()
     };
     reset_door_sensor();
-    insertSample(sensor_values);
-    console.log(sensor_values);
+    insertSample(sensor_data);
+    console.log(sensor_data);
 }, 1000);
 
 // retrieve last N data
