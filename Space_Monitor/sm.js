@@ -63,7 +63,7 @@ var update_DHT_sensor = function() {
 }
 
 var update_ADC_sensors = function() {
-    // read microphone
+    // start photoresistor conversion
     while (adc.busy) {
         console.log("wait 1");
     }
@@ -73,11 +73,11 @@ var update_ADC_sensors = function() {
         }
         console.log("in 1");
         ADC_sensor_luminosity = data1;
-    });
-    console.log("luminosity: " + ADC_sensor_luminosity);
+        console.log("luminosity: " + ADC_sensor_luminosity);
 
 
-    setTimeout(function() {
+
+        // start microphone conversion
         while (adc.busy) {
             console.log("wait 2");
         }
@@ -90,7 +90,11 @@ var update_ADC_sensors = function() {
         });
         console.log("noise: " + ADC_sensor_noise);
 
-    }, 500);
+    });
+
+
+
+
 }
 
 var reset_door_sensor = function() {
