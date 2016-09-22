@@ -31,20 +31,14 @@ var io = require('socket.io')(HTTPserver);
 io.on('connection', function(socket) {
     console.log("user connected to socket");
 
-    socket.on('messageFromClientToServer', function(data) {
-        console.log(data);
+    socket.on('client_askfordata', function(data) {
+        // @TODO send detailed data here (e.g. 10 entries)
     });
-
-    var sendLatestSamples = setInterval(function() {
-        getLatestSamples(10, function(results) {
-            var values = []
-            for (var i = 0; i < results.length; i++) {
-                values.push(results[i].humidity);
-            }
-            socket.emit('latestSamples', values);
-            console.log("sent    : " + values);
-        });
-    }, 1000);
+    // send live data every 10 seconds
+    var sendLiveData = setInterval(function() {
+        socket.emit('server_sendlivedata', sensor_data);
+        console.log("sent " + sensor_data);
+    }, 10000);
 
     socket.on('disconnect', function() {
         console.log("user disconnected from socket");
@@ -104,7 +98,7 @@ var button_door = new GPIO(17, 'in', 'rising', {
     persistentWatch: true,
     debounceTimeout: 1000
 }); // gpio 17, input, rising edge interrupts only, enable button to work on consecutive pushes, debounce for 1 second
-
+LED_connection_status.writeSync(online ? 1 : 0);
 
 /******* ADC *******/
 var ads1x15 = require('node-ads1x15');
@@ -122,7 +116,7 @@ var ADC_sensor_noise = 0;
 
 /******* Check Internet Connection Status *******/
 var previous_online_status = false;
-var online_check_interval = 0.5; // minutes
+var online_check_interval = 10; // minutes
 
 setInterval(function() {
     var isOnline = require('is-online');
@@ -216,28 +210,3 @@ var getLatestSamples = function(theCount, callback) {
             callback(docList);
         });
 };
-
-
-// // retrieve 5 records every 3000ms
-// setInterval(function() {
-//     getLatestSamples(5, function(results) {
-//         var temperature_values = [];
-//         var humidity_values = [];
-//         var datetime_values = [];
-//         for (var i = 0; i < results.length; i++) {
-//             temperature_values.push(results[i].temperature);
-//             humidity_values.push(results[i].humidity);
-//             datetime_values.push(results[i].datetime);
-//         }
-//         console.log(humidity_values);
-//     });
-// }, 3000);
-
-
-
-
-
-/******* Assess status of Cafe *******/
-function cafe_status() {
-
-}
