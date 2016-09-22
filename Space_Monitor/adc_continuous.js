@@ -13,7 +13,6 @@ var channel = 3; //channel 0, 1, 2, or 3...
 var samplesPerSecond = '250'; // see index.js for allowed values for your chip
 var progGainAmp = '4096'; // see index.js for allowed values for your chip
 
-//somewhere to store our reading
 adc.stopContinuousConversion(function(err) {
     if (err) {
         throw err;
@@ -25,7 +24,7 @@ if (!adc.busy) {
         if (err) {
             throw err;
         }
-        console.log(data);
+        console.log("start" + data);
     });
 }
 
@@ -34,7 +33,7 @@ adc.getLastConversionResults(function(err, data) {
     if (err) {
         throw err;
     }
-    console.log(data);
+    console.log("getlast" + data);
 });
 
 
