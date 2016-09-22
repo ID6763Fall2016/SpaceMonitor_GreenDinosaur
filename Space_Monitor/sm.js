@@ -69,6 +69,7 @@ var update_ADC_sensors = function() {
             if (err) {
                 throw err;
             }
+            console.log("in 1");
             ADC_sensor_luminosity = data;
         });
     }
@@ -79,6 +80,7 @@ var update_ADC_sensors = function() {
             if (err) {
                 throw err;
             }
+            console.log("in 2");
             ADC_sensor_noise = data;
         });
     }
