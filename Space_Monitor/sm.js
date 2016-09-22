@@ -74,6 +74,8 @@ var update_ADC_sensors = function() {
             console.log("luminosity: " + ADC_sensor_luminosity);
             sensor_flag = 1;
         });
+    } else {
+        console.log("waiting for " + sensor_flag);
     }
     // after 100 ms, read microphone
     setTimeout(function() {
@@ -86,6 +88,8 @@ var update_ADC_sensors = function() {
                 console.log("noise: " + ADC_sensor_noise);
                 sensor_flag = 0;
             });
+        } else {
+            console.log("waiting for " + sensor_flag);
         }
     }, 100);
 
