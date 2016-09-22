@@ -98,7 +98,7 @@ var button_door = new GPIO(17, 'in', 'rising', {
     persistentWatch: true,
     debounceTimeout: 1000
 }); // gpio 17, input, rising edge interrupts only, enable button to work on consecutive pushes, debounce for 1 second
-LED_connection_status.writeSync(online ? 1 : 0);
+LED_connection_status.writeSync(1);
 
 /******* ADC *******/
 var ads1x15 = require('node-ads1x15');
