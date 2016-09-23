@@ -12,10 +12,10 @@ GreenDinosaur team: John Kimionis, Hareen Godthi
 * an LED
 
 ####Assembly 
-1. Laser cut the pieces of the house template on 1/16" chipboard
-2. Use hot glue to put together the four side walls
+1. Laser cut the pieces of the house template on 1/16" chipboard.
+2. Use hot glue to put together the four side walls.
   * the two pentagons and the two rectangle pieces
-3. Glue the bottom piece to the four walls
+3. Glue the bottom piece to the four walls.
   * the bottom piece is the square with four outward extensions
 4. Glue a piece of tracing paper over the windows inside the house. 
 5. Tape the microphone to the underside of the roof piece so that it can be seen through the hole from the outside. 
