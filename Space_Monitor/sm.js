@@ -135,7 +135,7 @@ var ADC_sensor_noise = 0;
 var previous_online_status = false;
 var online_check_interval = 10; // minutes
 
-if (false) {
+if (true) {
     setInterval(function() {
         var isOnline = require('is-online');
         isOnline(function(err, online) {
