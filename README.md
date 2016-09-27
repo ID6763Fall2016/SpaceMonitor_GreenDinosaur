@@ -22,9 +22,9 @@ GreenDinosaur team: John Kimionis, Hareen Godthi
 5. Tape the microphone to the underside of the roof piece so that it can be seen through the hole from the outside. 
   * the roof pieces are the rounded rectangles with holes in the middle
 6. Like in the previous step, the photoresistor should be taped to the underside of the second roof piece. 
-7. Secure the temperature and humidity sensor in the rectangular hole in the side walls. 
+7. Secure the temperature and humidity sensor in the rectangular hole in the side wall. 
 8. Wire the breadboard with the button, resistor, and additional external wires through the hole in the side wall so that they are outside the house. 
 9. Place the raspberry pi inside the house. 
-10. Finally, play the two roof pieces on top of the house. 
+10. Finally, place the two roof pieces on top of the house. 
 
 ##How to Use the Code:
