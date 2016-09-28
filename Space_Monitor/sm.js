@@ -175,7 +175,7 @@ var DHT_sensor_hum = -1;
 
 var DHT_sensor_string = "";
 
-if (DHT_sensor.initialize(22, 4)) {
+if (DHT_sensor.initialize(22, 4)) { // model 22, gpio 4
     update_DHT_sensor();
     console.log(DHT_sensor_string);
 } else {
